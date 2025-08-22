@@ -3,11 +3,19 @@ import type { PasswordStore, PasswordConfig } from '../types';
 import { storage } from '../utils/storage';
 import { hashPassword, verifyPassword } from '../utils';
 
-export const usePasswordStore = create<PasswordStore>((set, get) => ({
-  isLocked: false,
-  isFirstLaunch: storage.isFirstLaunch(),
-  passwordHash: storage.getPasswordHash(),
-  config: storage.getPasswordConfig(),
+export const usePasswordStore = create<PasswordStore>((set, get) => {
+  const isFirstLaunch = storage.isFirstLaunch();
+  const passwordHash = storage.getPasswordHash();
+  const config = storage.getPasswordConfig();
+  
+  // Always start locked unless it's first launch (no password set yet)
+  const isLocked = !isFirstLaunch && passwordHash !== null;
+  
+  return {
+    isLocked,
+    isFirstLaunch,
+    passwordHash,
+    config,
 
   setPassword: async (password: string) => {
     const hash = await hashPassword(password);
@@ -142,4 +150,5 @@ export const usePasswordStore = create<PasswordStore>((set, get) => ({
     storage.savePasswordConfig(config);
     set({ config });
   },
-}));
+  };
+});

@@ -1,8 +1,8 @@
 version: 0.0.0
 files:
   - url: DreamWeave-Setup-0.0.0.exe
-    sha512: +kBWmuKyvN/mykx2AvsMPrYVF3A37pufmjBjGRIRxcX1QRq1SDo6ND2MNIRm+LQiZ6G+244dOZXRKDkArB/mxw==
-    size: 95926870
+    sha512: kb6CNUvI9JYc09TpU673sY6SeK781LNqr3jG31g1ceRJjhe3T2A2Gv6cj/4Tu4kw34YmgL/sMoPbS+ijB1Jibg==
+    size: 95926935
 path: DreamWeave-Setup-0.0.0.exe
-sha512: +kBWmuKyvN/mykx2AvsMPrYVF3A37pufmjBjGRIRxcX1QRq1SDo6ND2MNIRm+LQiZ6G+244dOZXRKDkArB/mxw==
-releaseDate: '2025-08-22T19:19:51.758Z'
+sha512: kb6CNUvI9JYc09TpU673sY6SeK781LNqr3jG31g1ceRJjhe3T2A2Gv6cj/4Tu4kw34YmgL/sMoPbS+ijB1Jibg==
+releaseDate: '2025-08-22T20:49:06.544Z'
