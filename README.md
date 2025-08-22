@@ -23,7 +23,7 @@ A modern dream journaling application built with React, TypeScript, and Tailwind
 ## Download
 
 ### Windows (.exe)
-Download the latest Windows executable from the [Releases](https://github.com/yourusername/dreamweave/releases) page:
+Download the latest Windows executable from the [Release]([https://github.com/yourusername/dreamweave/releases](https://github.com/johnmartinello/Dreamweave/tree/main/release)) page:
 
 1. Go to the [Release]([https://github.com/johnmartinello/dreamweave/release](https://github.com/johnmartinello/Dreamweave/tree/main/release)) page
 2. Download `DreamWeave-Setup-x.x.x.exe` (latest version)
