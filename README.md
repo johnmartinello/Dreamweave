@@ -2,6 +2,24 @@
 
 A modern dream journaling application built with React, TypeScript, and Tailwind CSS. Features a glass morphism UI design and powerful dream organization capabilities.
 
+## Screenshots
+
+### Main Menu
+![DreamWeave Menu](images/dreamweavemenu.png)
+*The main menu interface with glass morphism design*
+
+### Dream Editor
+![DreamWeave Editor](images/dreamweaveeditor.png)
+*Create and edit dreams with rich text formatting and citation support*
+
+### Dream Graph
+![DreamWeave Graph](images/dreamweavegraph.png)
+*Interactive graph visualization showing connections between dreams*
+
+### Citation System
+![DreamWeave Citations](images/dreamweavecitations.png)
+*Citation management and dream linking features*
+
 ## Download
 
 ### Windows (.exe)
