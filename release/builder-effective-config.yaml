@@ -1,0 +1,17 @@
+directories:
+  output: release
+  buildResources: build
+appId: com.dreamweave.app
+productName: DreamWeave
+files:
+  - filter:
+      - dist/**/*
+      - electron/**/*
+      - node_modules/**/*
+mac:
+  category: public.app-category.productivity
+win:
+  target: nsis
+linux:
+  target: AppImage
+electronVersion: 37.3.1
