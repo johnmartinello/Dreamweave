@@ -3,7 +3,7 @@ import { useDreamStore } from '../../store/dreamStore';
 import { useI18n } from '../../hooks/useI18n';
 import { cn } from '../../utils';
 import { TagPill } from '../dreams/TagPill';
-import { Settings, Trash2, ChevronDown, ChevronRight, FolderTree } from 'lucide-react';
+import { Settings, Trash2, ChevronDown, ChevronRight, FolderTree, BarChart3 } from 'lucide-react';
 import { ConfigurationModal } from '../ConfigurationModal';
 import { TrashModal } from '../dreams/TrashModal';
 import { LockButton } from '../auth/LockButton';
@@ -112,6 +112,29 @@ export function Sidebar() {
               {/* Shimmer effect on hover */}
               <div className="absolute inset-0 bg-gradient-shimmer bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <span className="relative z-10">{t('connections')}</span>
+            </Button>
+
+            <Button
+              variant="ghost"
+              className={cn(
+                "w-full justify-start h-12 text-base rounded-xl relative overflow-hidden group cursor-pointer",
+                currentView === 'insights'
+                  ? "glass text-white/90 font-medium shadow-inner-lg border border-white/20"
+                  : "text-white/60 hover:glass hover:text-white/90 hover:font-medium hover:shadow-inner-lg hover:border-white/20"
+              )}
+              onClick={() => {
+                setSelectedTag(null);
+                setTimeout(() => {
+                  setCurrentView('insights');
+                }, 0);
+              }}
+            >
+              {/* Shimmer effect on hover */}
+              <div className="absolute inset-0 bg-gradient-shimmer bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              <span className="relative z-10 flex items-center gap-2">
+                <BarChart3 className="w-4 h-4" />
+                {t('tagInsights')}
+              </span>
             </Button>
           </div>
 

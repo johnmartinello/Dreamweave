@@ -26,7 +26,7 @@ export interface TagWithColor {
   color: CategoryColor;
 }
 
-export type ViewType = 'home' | 'dream' | 'graph';
+export type ViewType = 'home' | 'dream' | 'graph' | 'insights';
 
 export type AIProvider = 'gemini' | 'lmstudio';
 export type Language = 'en' | 'pt-BR';

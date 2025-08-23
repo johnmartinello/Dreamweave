@@ -3,6 +3,7 @@ import { useDreamStore } from '../../store/dreamStore';
 import { DreamList } from '../dreams/DreamList';
 import { DreamEditor } from '../dreams/DreamEditor.tsx';
 import { DreamGraph } from '../dreams/DreamGraph';
+import { CategoryInsights } from '../dreams/CategoryInsights';
 
 export function MainPanel() {
   const currentView = useDreamStore((state) => state.currentView);
@@ -16,6 +17,8 @@ export function MainPanel() {
         return <DreamEditor />;
       case 'graph':
         return <DreamGraph />;
+      case 'insights':
+        return <CategoryInsights />;
       default:
         return <DreamList />;
     }
