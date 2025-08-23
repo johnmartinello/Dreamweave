@@ -179,16 +179,16 @@ export function DreamList() {
                       {/* Enhanced Tags */}
                       {dream.tags.length > 0 && (
                         <div className="flex items-center gap-2 flex-wrap mb-3">
-                          
-                                                      {dream.tags.slice(0, 3).map((tag) => (
-                              <TagPill 
-                                key={tag} 
-                                tag={tag} 
-                                size="sm" 
-                                variant="gradient"
-                                color={getTagColor(tag)}
-                              />
-                            ))}
+                          {dream.tags.slice(0, 3).map((tag) => (
+                            <TagPill 
+                              key={tag.id} 
+                              tag={tag.label} 
+                              size="sm" 
+                              variant="gradient"
+                              color={getTagColor(tag.id) as any}
+                              tooltip={`${tag.categoryId} > ${tag.subcategoryId} > ${tag.label}`}
+                            />
+                          ))}
                           {dream.tags.length > 3 && (
                             <span className="text-xs text-gray-400 bg-white/5 px-2 py-1 rounded-full border border-white/10">
                               +{dream.tags.length - 3} more

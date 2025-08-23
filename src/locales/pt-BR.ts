@@ -28,7 +28,58 @@ export const ptBR = {
   backToDreams: 'Voltar aos Sonhos',
   describeYourDream: 'Descreva seu sonho em detalhes... Deixe seus pensamentos fluírem naturalmente... use @ para citar sonhos',
   addCategory: 'Adicionar Categoria...',
+  category: 'Categoria',
+  subcategory: 'Subcategoria',
   noTagsYet: 'Nenhuma tag ainda',
+  
+  // Category translations
+  categoryNames: {
+    emotions: 'Emoções e Humores',
+    characters: 'Personagens e Seres',
+    places: 'Lugares e Ambientes',
+    actions: 'Ações e Eventos',
+    objects: 'Objetos e Itens',
+    dreamTypes: 'Tipos e Estilos de Sonho',
+    uncategorized: 'Sem categoria',
+  },
+  
+  // Subcategory translations
+  subcategories: {
+    // Emotions
+    positive: 'Positivo',
+    negative: 'Negativo',
+    complexStates: 'Estados Complexos',
+    
+    // Characters
+    people: 'Pessoas',
+    animals: 'Animais',
+    mythicalSpiritual: 'Mítico/Espiritual',
+    deceasedMemoryFigures: 'Falecidos/Figuras da Memória',
+    
+    // Places
+    naturalSettings: 'Ambientes Naturais',
+    urbanManmade: 'Urbano/Construído',
+    cosmicUnreal: 'Cósmico/Irreal',
+    weatherAtmosphere: 'Clima/Atmosfera',
+    
+    // Actions
+    movement: 'Movimento',
+    interactions: 'Interações',
+    transformations: 'Transformações',
+    unusualEvents: 'Eventos Incomuns',
+    
+    // Objects
+    everydayObjects: 'Objetos Cotidianos',
+    mysticalUnrealItems: 'Itens Místicos/Irreais',
+    technologyMachines: 'Tecnologia/Máquinas',
+    symbolsSigns: 'Símbolos/Sinais',
+    
+    // Dream Types
+    lucidity: 'Lucidez',
+    tone: 'Tom',
+    purposeMeaning: 'Propósito/Significado',
+    physicalState: 'Estado Físico',
+  },
   tagsWillAppear: 'As tags aparecerão aqui conforme você as adicionar',
   noNewTags: 'Nenhuma nova tag foi gerada',
   noTitleGenerated: 'Nenhum título foi gerado',

@@ -9,12 +9,13 @@ import { TagPill } from './TagPill';
 import { formatDateForInput, useWindowSize } from '../../utils';
 import { cn } from '../../utils';
 import { useI18n } from '../../hooks/useI18n';
+import { CATEGORY_META } from '../../types/taxonomy';
 
 interface GraphNode {
   id: string;
   title: string;
   date: string;
-  tags: string[];
+  tags: { id: string; label: string; categoryId: string; subcategoryId: string }[];
   citedDreams: string[];
   citationCount: number;
   x?: number;
@@ -119,7 +120,7 @@ export function DreamGraph() {
   const getNodeColor = (node: GraphNode) => {
     if (node.tags.length === 0) return '#6b7280';
     const primaryTag = node.tags[0];
-    const color = getTagColor(primaryTag);
+    const color = getTagColor(primaryTag.id);
     
     const colorMap: Record<string, string> = {
       cyan: '#06b6d4',
@@ -316,16 +317,31 @@ export function DreamGraph() {
                   {t('categories')}
                 </label>
                 <div className="flex flex-wrap gap-1 max-h-20 overflow-y-auto">
+                  {Object.values(CATEGORY_META).map(meta => (
+                    <button
+                      key={meta.id}
+                      onClick={() => handleTagToggle(`category:${meta.id}`)}
+                      className="cursor-pointer"
+                      title={meta.label}
+                    >
+                      <TagPill
+                        tag={meta.label}
+                        size="sm"
+                        variant={graphFilters.selectedTags.includes(`category:${meta.id}`) ? "gradient" : "default"}
+                        color={meta.color as any}
+                      />
+                    </button>
+                  ))}
                   {getAllTagsWithColors().map((tag) => (
                     <button
-                      key={tag.name}
-                      onClick={() => handleTagToggle(tag.name)}
+                      key={tag.id}
+                      onClick={() => handleTagToggle(tag.id)}
                       className="cursor-pointer"
                     >
                       <TagPill
-                        tag={tag.name}
+                        tag={tag.label}
                         size="sm"
-                        variant={graphFilters.selectedTags.includes(tag.name) ? "gradient" : "default"}
+                        variant={graphFilters.selectedTags.includes(tag.id) ? "gradient" : "default"}
                         color={tag.color}
                       />
                     </button>
@@ -467,7 +483,7 @@ export function DreamGraph() {
                   <div class="font-semibold text-white">${node.title}</div>
                   <div class="text-gray-300 text-sm">${formatDateForInput(node.date)}</div>
                   <div class="text-gray-400 text-xs mt-1">Citations: ${node.citationCount}</div>
-                  ${node.tags.length > 0 ? `<div class=\"text-gray-400 text-xs mt-1\">Tags: ${node.tags.join(', ')}</div>` : ''}
+                  ${node.tags.length > 0 ? `<div class=\"text-gray-400 text-xs mt-1\">Tags: ${node.tags.map(t => t.label).join(', ')}</div>` : ''}
                 </div>
               `}
               nodeColor={getNodeColor}
@@ -503,11 +519,11 @@ export function DreamGraph() {
               <div className="flex flex-wrap gap-1">
                 {hoveredNode.tags.slice(0, 3).map((tag) => (
                   <TagPill
-                    key={tag}
-                    tag={tag}
+                    key={tag.id}
+                    tag={tag.label}
                     size="sm"
                     variant="gradient"
-                    color={getTagColor(tag)}
+                    color={getTagColor(tag.id)}
                   />
                 ))}
                 {hoveredNode.tags.length > 3 && (

@@ -8,6 +8,7 @@ interface TagPillProps {
   onRemove?: (tag: string) => void;
   variant?: 'default' | 'gradient' | 'outline';
   color?: 'cyan' | 'purple' | 'pink' | 'emerald' | 'amber' | 'blue' | 'indigo' | 'violet' | 'rose' | 'teal' | 'lime' | 'orange' | 'red' | 'green' | 'yellow';
+  tooltip?: string;
 }
 
 export function TagPill({ 
@@ -16,7 +17,8 @@ export function TagPill({
   removable = false, 
   onRemove, 
   variant = 'default',
-  color = 'cyan'
+  color = 'cyan',
+  tooltip
 }: TagPillProps) {
   const handleRemove = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -57,6 +59,7 @@ export function TagPill({
           'text-sm': size === 'md',
         }
       )}
+      title={tooltip}
     >
       <span className="truncate">{tag}</span>
       {removable && (

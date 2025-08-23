@@ -28,7 +28,58 @@ export const en = {
   backToDreams: 'Back to Dreams',
   describeYourDream: 'Describe your dream in detail... Let your thoughts flow naturally... use @ to cite dreams',
   addCategory: 'Add Category...',
+  category: 'Category',
+  subcategory: 'Subcategory',
   noTagsYet: 'No tags yet',
+  
+  // Category translations
+  categoryNames: {
+    emotions: 'Emotions & Moods',
+    characters: 'Characters & Beings',
+    places: 'Places & Environments',
+    actions: 'Actions & Events',
+    objects: 'Objects & Items',
+    dreamTypes: 'Dream Types & Styles',
+    uncategorized: 'Uncategorized',
+  },
+  
+  // Subcategory translations
+  subcategories: {
+    // Emotions
+    positive: 'Positive',
+    negative: 'Negative',
+    complexStates: 'Complex States',
+    
+    // Characters
+    people: 'People',
+    animals: 'Animals',
+    mythicalSpiritual: 'Mythical/Spiritual',
+    deceasedMemoryFigures: 'Deceased/Memory Figures',
+    
+    // Places
+    naturalSettings: 'Natural Settings',
+    urbanManmade: 'Urban/Manmade',
+    cosmicUnreal: 'Cosmic/Unreal',
+    weatherAtmosphere: 'Weather/Atmosphere',
+    
+    // Actions
+    movement: 'Movement',
+    interactions: 'Interactions',
+    transformations: 'Transformations',
+    unusualEvents: 'Unusual Events',
+    
+    // Objects
+    everydayObjects: 'Everyday Objects',
+    mysticalUnrealItems: 'Mystical/Unreal Items',
+    technologyMachines: 'Technology/Machines',
+    symbolsSigns: 'Symbols/Signs',
+    
+    // Dream Types
+    lucidity: 'Lucidity',
+    tone: 'Tone',
+    purposeMeaning: 'Purpose/Meaning',
+    physicalState: 'Physical State',
+  },
   tagsWillAppear: 'Tags will appear here as you add them',
   noNewTags: 'No new tags were generated',
   noTitleGenerated: 'No title was generated',
