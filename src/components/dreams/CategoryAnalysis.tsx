@@ -4,7 +4,7 @@ import { Button } from '../ui/Button';
 import { useDreamStore } from '../../store/dreamStore';
 import { CATEGORY_META, UNCATEGORIZED_META, getTranslatedSubcategory } from '../../types/taxonomy';
 import { useI18n } from '../../hooks/useI18n';
-import { BarChart3, Network, TrendingUp, PieChart, Tag } from 'lucide-react';
+import { cn } from '../../utils';
 
 interface TagStats {
   id: string;
@@ -224,11 +224,11 @@ export function CategoryAnalysis() {
   };
 
   const tabs = [
-    { id: 'overview', label: t('overview'), icon: PieChart },
-    { id: 'tags', label: t('tags'), icon: Tag },
-    { id: 'relationships', label: t('relationships'), icon: Network },
-    { id: 'categories', label: t('categories'), icon: BarChart3 },
-    { id: 'trends', label: t('trends'), icon: TrendingUp }
+    { id: 'overview', label: t('overview') },
+    { id: 'tags', label: t('tags') },
+    { id: 'relationships', label: t('relationships') },
+    { id: 'categories', label: t('categories') },
+    { id: 'trends', label: t('trends') }
   ];
 
   return (
@@ -243,21 +243,22 @@ export function CategoryAnalysis() {
 
       {/* Tab Navigation */}
       <div className="flex space-x-1 bg-white/5 rounded-lg p-1">
-        {tabs.map(tab => {
-          const Icon = tab.icon;
-          return (
-            <Button
-              key={tab.id}
-              variant={activeTab === tab.id ? "gradient" : "ghost"}
-              size="sm"
-              onClick={() => setActiveTab(tab.id as any)}
-              className="flex items-center gap-2"
-            >
-              <Icon className="w-4 h-4" />
-              {tab.label}
-            </Button>
-          );
-        })}
+        {tabs.map(tab => (
+          <Button
+            key={tab.id}
+            variant="ghost"
+            size="sm"
+            onClick={() => setActiveTab(tab.id as any)}
+            className={cn(
+              "flex items-center gap-2",
+              activeTab === tab.id 
+                ? "glass text-white/90 font-medium shadow-inner-lg border border-white/20"
+                : "text-white/60 hover:glass hover:text-white/90 hover:font-medium hover:shadow-inner-lg hover:border-white/20"
+            )}
+          >
+            {tab.label}
+          </Button>
+        ))}
       </div>
 
       {/* Tab Content */}
@@ -302,7 +303,7 @@ export function CategoryAnalysis() {
                   <select
                     value={selectedCategory || ''}
                     onChange={(e) => setSelectedCategory(e.target.value || null)}
-                    className="bg-white/10 border border-white/20 rounded px-3 py-2 text-white"
+                    className="bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-all duration-200 [&>option]:bg-gray-800 [&>option]:text-white"
                   >
                     <option value="">{t('allCategories')}</option>
                     {categorySummaries.map(summary => (
@@ -319,7 +320,7 @@ export function CategoryAnalysis() {
                     <select
                       value={selectedSubcategory || ''}
                       onChange={(e) => setSelectedSubcategory(e.target.value || null)}
-                      className="bg-white/10 border border-white/20 rounded px-3 py-2 text-white"
+                      className="bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-white/30 transition-all duration-200 [&>option]:bg-gray-800 [&>option]:text-white"
                     >
                       <option value="">{t('allSubcategories')}</option>
                       {Object.keys(categorySummaries.find(s => s.categoryId === selectedCategory)?.subcategoryBreakdown || {}).map(sub => (
@@ -346,7 +347,7 @@ export function CategoryAnalysis() {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-400">{t('category')}:</span>
-                      <span className="text-white">{t(`categoryNames.${tag.categoryId}`)}</span>
+                      <span className="text-white">{tag.categoryLabel}</span>
                     </div>
                     
                     <div className="flex justify-between">
@@ -438,7 +439,7 @@ export function CategoryAnalysis() {
                       className="w-6 h-6 rounded-full"
                       style={{ backgroundColor: getCategoryColor(summary.color) }}
                     />
-                    <h3 className="text-lg font-semibold text-white">{t(`categoryNames.${summary.categoryId}`)}</h3>
+                    <h3 className="text-lg font-semibold text-white">{summary.categoryLabel}</h3>
                   </div>
                   <div className="text-sm text-gray-400">
                     {summary.totalTags} {t('tags')} | {summary.totalUsage} {t('uses')}

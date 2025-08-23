@@ -3,7 +3,7 @@ import { useDreamStore } from '../../store/dreamStore';
 import { useI18n } from '../../hooks/useI18n';
 import { cn } from '../../utils';
 import { TagPill } from '../dreams/TagPill';
-import { Settings, Trash2, ChevronDown, ChevronRight, FolderTree, BarChart3 } from 'lucide-react';
+import { Settings, Trash2, ChevronDown, ChevronRight, FolderTree } from 'lucide-react';
 import { ConfigurationModal } from '../ConfigurationModal';
 import { TrashModal } from '../dreams/TrashModal';
 import { LockButton } from '../auth/LockButton';
@@ -132,7 +132,6 @@ export function Sidebar() {
               {/* Shimmer effect on hover */}
               <div className="absolute inset-0 bg-gradient-shimmer bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <span className="relative z-10 flex items-center gap-2">
-                <BarChart3 className="w-4 h-4" />
                 {t('tagInsights')}
               </span>
             </Button>
