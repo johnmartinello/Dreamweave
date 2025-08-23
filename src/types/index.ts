@@ -24,6 +24,7 @@ export interface TagWithColor {
 export type ViewType = 'home' | 'dream' | 'graph';
 
 export type AIProvider = 'gemini' | 'lmstudio';
+export type Language = 'en' | 'pt-BR';
 
 export interface AIConfig {
   enabled: boolean;

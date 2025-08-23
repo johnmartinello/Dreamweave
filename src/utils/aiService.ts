@@ -274,7 +274,7 @@ Tags:`;
   }
 
   private static async generateTitleWithLMStudio(content: string, config: AIConfig): Promise<AITitleGenerationResponse> {
-    const prompt = `Create a concise, evocative title (3-8 words) for this dream based on its content. The title should capture the essence, emotion, or key theme of the dream. Return only the title with no additional text, quotes, or formatting. If the text is not in English, generate the title in the same language as the text.
+    const prompt = `Create a concise, evocative title (3-8 words) for this dream based on its content. The title should capture the essence, emotion, or key theme of the dream. Return only the title with no additional text, quotes, or formatting.
 
     Dream content:
     ${content}

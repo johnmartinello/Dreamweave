@@ -2,12 +2,14 @@ import { useState, useEffect, useRef } from 'react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { usePasswordStore } from '../../store/passwordStore';
+import { useI18n } from '../../hooks/useI18n';
 
 interface LockScreenProps {
   isFirstLaunch?: boolean;
 }
 
 export function LockScreen({ isFirstLaunch = false }: LockScreenProps) {
+  const { t } = useI18n();
   const [passwordInput, setPasswordInput] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -32,11 +34,11 @@ export function LockScreen({ isFirstLaunch = false }: LockScreenProps) {
       if (isFirstLaunch) {
         // First launch - create password
         if (passwordInput !== confirmPassword) {
-          setError('Passwords do not match');
+          setError(t('passwordsDoNotMatch'));
           return;
         }
         if (passwordInput.length < 1) {
-          setError('Please enter a password');
+          setError(t('passwordRequired'));
           return;
         }
         await setPassword(passwordInput);
@@ -44,14 +46,14 @@ export function LockScreen({ isFirstLaunch = false }: LockScreenProps) {
         // Regular login
         const isValid = await verifyPassword(passwordInput);
         if (!isValid) {
-          setError('Incorrect password');
+          setError(t('wrongPassword'));
           setPasswordInput('');
           return;
         }
         unlock();
       }
     } catch (err) {
-      setError('An error occurred. Please try again.');
+      setError(t('errorOccurred'));
     } finally {
       setIsLoading(false);
     }
@@ -83,12 +85,12 @@ export function LockScreen({ isFirstLaunch = false }: LockScreenProps) {
               </svg>
             </div>
             <h1 className="text-3xl font-bold text-white mb-2">
-              {isFirstLaunch ? 'Welcome to DreamWeave' : 'DreamWeave'}
+              {isFirstLaunch ? t('welcomeToDreamWeave') : 'DreamWeave'}
             </h1>
             <p className="text-white/60 text-sm">
               {isFirstLaunch 
-                ? 'Create a password to protect your dreams' 
-                : 'Enter your password to continue'
+                ? t('createPasswordToProtect') 
+                : t('enterPasswordToContinue')
               }
             </p>
           </div>
@@ -100,7 +102,7 @@ export function LockScreen({ isFirstLaunch = false }: LockScreenProps) {
                 ref={passwordInputRef}
                 type="password"
                 variant="glass"
-                placeholder="Password"
+                placeholder={t('password')}
                 value={passwordInput}
                 onChange={(e) => setPasswordInput(e.target.value)}
                 onKeyPress={handleKeyPress}
@@ -114,7 +116,7 @@ export function LockScreen({ isFirstLaunch = false }: LockScreenProps) {
                 <Input
                   type="password"
                   variant="glass"
-                  placeholder="Confirm password"
+                  placeholder={t('confirmPassword')}
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   onKeyPress={handleKeyPress}
@@ -142,10 +144,10 @@ export function LockScreen({ isFirstLaunch = false }: LockScreenProps) {
                 {isLoading ? (
                   <div className="flex items-center justify-center">
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                    {isFirstLaunch ? 'Creating...' : 'Unlocking...'}
+                    {isFirstLaunch ? t('creating') : t('unlocking')}
                   </div>
                 ) : (
-                  isFirstLaunch ? 'Create Password' : 'Unlock'
+                  isFirstLaunch ? t('createPassword') : t('unlock')
                 )}
               </span>
             </Button>
@@ -155,8 +157,7 @@ export function LockScreen({ isFirstLaunch = false }: LockScreenProps) {
           {isFirstLaunch && (
             <div className="mt-6 p-4 glass rounded-lg border border-white/20">
               <p className="text-white/70 text-xs text-center">
-                Important: There is no password recovery option. 
-                If you forget your password, you'll need to reset the app data.
+                {t('noPasswordRecovery')}
               </p>
             </div>
           )}

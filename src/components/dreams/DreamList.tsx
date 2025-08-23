@@ -8,8 +8,10 @@ import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { SearchBar } from './SearchBar';
 import { DateFilter } from './DateFilter';
+import { useI18n } from '../../hooks/useI18n';
 
 export function DreamList() {
+  const { t } = useI18n();
   const { 
     getFilteredDreams, 
     setSelectedDream, 
@@ -67,7 +69,7 @@ export function DreamList() {
                     ? `Dreams tagged with "${selectedTag}"` 
                     : dateRange.startDate || dateRange.endDate
                     ? 'Filtered dreams'
-                    : 'Dreams'}
+                    : t('dreams')}
                 </h2>
                 <p className="text-gray-300">
                   {dreams.length === 0
@@ -96,7 +98,7 @@ export function DreamList() {
             <div className="flex-1 max-w-md">
               <SearchBar 
                 onSearch={setSearchQuery}
-                placeholder="Search dreams by title, description, or tags..."
+                placeholder={t('searchPlaceholder')}
                 showClearButton={!!searchQuery}
               />
             </div>
@@ -198,10 +200,10 @@ export function DreamList() {
                       {/* Enhanced Hover indicator */}
                       <div className="pt-3 border-t border-white/10 opacity-0 group-hover:opacity-100 transition-all duration-300 mt-auto">
                         <div className="flex items-center justify-between">
-                                                  <div className="flex items-center text-xs text-gray-400">
-                          <Clock className="w-3 h-3 mr-2 text-gray-500" />
-                          Click to view details
-                        </div>
+                                                                        <div className="flex items-center text-xs text-gray-400">
+                        <Clock className="w-3 h-3 mr-2 text-gray-500" />
+                        {t('clickToViewDetails')}
+                      </div>
                           
                         </div>
                       </div>

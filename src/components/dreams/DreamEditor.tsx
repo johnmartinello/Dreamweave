@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { ArrowLeft, Calendar, Trash2, Edit3, AlertTriangle, Sparkles, X, Check, Link, Search } from 'lucide-react';
 import { useDreamStore } from '../../store/dreamStore';
+import { useI18n } from '../../hooks/useI18n';
 import { Button } from '../ui/Button';
 import { Modal } from '../ui/Modal';
 import { Input } from '../ui/Input';
@@ -14,6 +15,7 @@ import { cn } from '../../utils';
 
 
 export function DreamEditor() {
+  const { t, tArray } = useI18n();
   const {
     dreams,
     selectedDreamId,
@@ -175,7 +177,7 @@ export function DreamEditor() {
 
   const handleGenerateAITags = async () => {
     if (!description.trim()) {
-      alert('Please add some dream content first');
+      alert(t('pleaseAddContent'));
       return;
     }
 
@@ -190,7 +192,7 @@ export function DreamEditor() {
         setSuggestedTags(newTags);
         setShowAITagModal(true);
       } else {
-        alert('No new tags were generated');
+        alert(t('noNewTags'));
       }
     } catch (error) {
       console.error('Error generating categories:', error);
@@ -202,7 +204,7 @@ export function DreamEditor() {
 
   const handleGenerateAITitle = async () => {
     if (!description.trim()) {
-      alert('Please add some dream content first');
+      alert(t('pleaseAddContent'));
       return;
     }
 
@@ -214,7 +216,7 @@ export function DreamEditor() {
         setSuggestedTitle(generatedTitle.trim());
         setShowTitleSuggestion(true);
       } else {
-        alert('No title was generated');
+        alert(t('noTitleGenerated'));
       }
     } catch (error) {
       console.error('Error generating title:', error);
@@ -441,13 +443,7 @@ export function DreamEditor() {
     return new Date(year, month + 1, 0).getDate();
   };
 
-  const getMonthName = (month: number) => {
-    const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-    return months[month];
-  };
+
 
   const handleDateSelect = (day: number) => {
     setSelectedDay(day);
@@ -483,10 +479,10 @@ export function DreamEditor() {
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500/20 to-pink-500/20 flex items-center justify-center mx-auto mb-6 border border-red-400/30">
             <Edit3 className="w-8 h-8 text-red-300" />
           </div>
-          <h2 className="text-2xl font-semibold text-gradient-pink mb-4">Dream not found</h2>
+          <h2 className="text-2xl font-semibold text-gradient-pink mb-4">{t('dreamNotFound')}</h2>
           <Button onClick={handleBack} variant="primary">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dreams
+            {t('backToDreams')}
           </Button>
         </Card>
       </div>
@@ -530,7 +526,7 @@ export function DreamEditor() {
                     <Input
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      placeholder="Dream title..."
+                      placeholder={t('titlePlaceholder')}
                       variant="transparent"
                       className="text-3xl font-bold px-0 py-2 rounded-xl border border-white/10 text-white/80 hover:glass hover:text-white/90 hover:font-medium hover:shadow-inner-lg hover:border-white/20 transition-all duration-300"
                     />
@@ -543,7 +539,7 @@ export function DreamEditor() {
                         variant="ghost"
                         className="text-gray-300 hover:text-gray-200 hover:glass hover:bg-gray-500/10 px-3 py-1 rounded-xl transition-all duration-300 border border-gray-400/20"
                       >
-                        {isGeneratingTitle ? 'Thinking...' : 'Suggestion'}
+                        {isGeneratingTitle ? t('thinking') : t('suggestion')}
                       </Button>
                     )}
                   </div>
@@ -569,7 +565,7 @@ export function DreamEditor() {
                       value={newTag}
                       onChange={(e) => setNewTag(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      placeholder="Add Category..."
+                      placeholder={t('tagPlaceholder')}
                       variant="transparent"
                       className="w-24 border-b border-white/20 focus:border-gray-400 px-0 py-1 text-sm"
                     />
@@ -580,7 +576,7 @@ export function DreamEditor() {
                         variant="ghost"
                         className="text-white/60 hover:glass hover:text-white/90 hover:font-medium hover:shadow-inner-lg hover:border-white/20 px-3 py-1 rounded-xl transition-all duration-300 border border-white/10"
                       >
-                        Add
+                        {t('add')}
                       </Button>
                     )}
                   </div>
@@ -594,7 +590,7 @@ export function DreamEditor() {
                       variant="ghost"
                       className="text-gray-300 hover:text-gray-200 hover:glass hover:bg-gray-500/10 px-3 py-1 rounded-xl transition-all duration-300 border border-gray-400/20"
                     >
-                      {isGeneratingTags ? 'Thinking...' : 'Suggestions'}
+                                              {isGeneratingTags ? t('thinking') : t('suggestions')}
                     </Button>
                   )}
                 </div>
@@ -697,7 +693,7 @@ export function DreamEditor() {
                 onScroll={() => {
                   if (mentionOpen) updateMentionDropdownPosition();
                 }}
-                placeholder="Describe your dream in detail... Let your thoughts flow naturally..."
+                placeholder={t('describeYourDream')}
                 variant="transparent"
                 className="min-h-[500px] text-base leading-relaxed w-full"
                 style={{ fontFamily: 'Inter, system-ui, sans-serif' }}
@@ -709,7 +705,7 @@ export function DreamEditor() {
                   style={{ top: mentionPosition.top, left: mentionPosition.left }}
                 >
                   {getFilteredMentionDreams().length === 0 ? (
-                    <div className="px-3 py-2 text-sm text-gray-400">No matches</div>
+                    <div className="px-3 py-2 text-sm text-gray-400">{t('noResults')}</div>
                   ) : (
                     getFilteredMentionDreams().map((d, idx) => (
                       <div
@@ -740,7 +736,7 @@ export function DreamEditor() {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Link className="w-5 h-5 text-grey-300" />
-                  <h3 className="text-lg font-semibold text-white">Dream Citations</h3>
+                  <h3 className="text-lg font-semibold text-white">{t('dreamCitations')}</h3>
                 </div>
                                  <Button
                    onClick={() => setShowCitationSearch(!showCitationSearch)}
@@ -758,7 +754,7 @@ export function DreamEditor() {
                   <Input
                     value={citationSearchQuery}
                     onChange={(e) => setCitationSearchQuery(e.target.value)}
-                    placeholder="Search dreams to cite..."
+                    placeholder={t('searchDreamsToCite')}
                     variant="transparent"
                     className="bg-white/5 border-white/20 text-white placeholder-gray-400"
                   />
@@ -766,7 +762,7 @@ export function DreamEditor() {
                   <div className="max-h-48 overflow-y-auto space-y-2">
                     {getFilteredDreamsForCitation().length === 0 ? (
                       <div className="text-center py-4 text-gray-400">
-                        {citationSearchQuery ? 'No dreams found' : 'No dreams available to cite'}
+                        {citationSearchQuery ? t('noDreamsFound') : t('noDreamsAvailable')}
                       </div>
                     ) : (
                       getFilteredDreamsForCitation().map((citedDream) => (
@@ -799,7 +795,7 @@ export function DreamEditor() {
               {/* Current Citations */}
               {citedDreams.length > 0 && (
                 <div className="space-y-2">
-                  <h4 className="text-sm font-medium text-gray-300">Cited Dreams:</h4>
+                  <h4 className="text-sm font-medium text-gray-300">{t('citedDreams')}:</h4>
                   {citedDreams.map((citedDreamId) => {
                     const citedDream = dreams.find(d => d.id === citedDreamId);
                     if (!citedDream) return null;
@@ -833,7 +829,7 @@ export function DreamEditor() {
               {/* Dreams that cite this dream */}
               {dream && getDreamsThatCite(dream.id).length > 0 && (
                 <div className="space-y-2">
-                  <h4 className="text-sm font-medium text-gray-300">Dreams that cite this dream:</h4>
+                  <h4 className="text-sm font-medium text-gray-300">{t('dreamsThatCite')}:</h4>
                   {getDreamsThatCite(dream.id).map((citingDream) => (
                     <div
                       key={citingDream.id}
@@ -864,7 +860,7 @@ export function DreamEditor() {
           <Modal
             isOpen={showCitedDreamModal}
             onClose={() => setShowCitedDreamModal(false)}
-            title={citedDreamPreview?.title || 'Dream Preview'}
+            title={citedDreamPreview?.title || t('dreamPreview')}
             className="max-w-4xl max-h-[80vh]"
           >
             {citedDreamPreview && (
@@ -902,12 +898,12 @@ export function DreamEditor() {
               {isSaving ? (
                 <>
                   <div className="w-2 h-2 rounded-full bg-green-600 mr-2 animate-pulse"></div>
-                  Saving changes...
+                  {t('savingChanges')}
                 </>
               ) : (
                 <>
                   <div className="w-2 h-2 rounded-full bg-green-600 mr-2"></div>
-                  All changes are automatically saved
+                  {t('allChangesSaved')}
                 </>
               )}
             </div>
@@ -923,25 +919,25 @@ export function DreamEditor() {
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500/20 to-pink-500/20 flex items-center justify-center mx-auto mb-4 border border-red-400/30">
                 <AlertTriangle className="w-8 h-8 text-red-300" />
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Delete Dream</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">{t('deleteDream')}</h3>
               <p className="text-gray-300 mb-6">
-                Are you sure you want to delete "{dream?.title}"? This action will move it to the trash.
+                {t('deleteDreamConfirm', { title: dream?.title })}
               </p>
               <div className="flex gap-3">
-                <Button
-                  variant="ghost"
-                  onClick={cancelDelete}
-                  className="flex-1 text-gray-300 hover:text-white hover:glass"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={confirmDelete}
-                  className="flex-1 text-red-300 hover:text-red-200 hover:bg-red-500/10"
-                >
-                  Delete
-                </Button>
+                                  <Button
+                    variant="ghost"
+                    onClick={cancelDelete}
+                    className="flex-1 text-gray-300 hover:text-white hover:glass"
+                  >
+                    {t('cancel')}
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    onClick={confirmDelete}
+                    className="flex-1 text-red-300 hover:text-red-200 hover:bg-red-500/10"
+                  >
+                    {t('delete')}
+                  </Button>
               </div>
             </div>
           </Card>
@@ -970,7 +966,7 @@ export function DreamEditor() {
                 ←
               </Button>
               <div className="text-center">
-                <div className="font-semibold text-white">{getMonthName(selectedMonth)}</div>
+                <div className="font-semibold text-white">{tArray('months')[selectedMonth]}</div>
                 <div className="text-sm text-gray-300">{selectedYear}</div>
               </div>
               <Button
@@ -1022,29 +1018,29 @@ export function DreamEditor() {
             
             {/* Quick Actions */}
             <div className="flex gap-2">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => {
-                  const today = new Date();
-                  setSelectedYear(today.getFullYear());
-                  setSelectedMonth(today.getMonth());
-                  setSelectedDay(today.getDate());
-                  setDate(formatDateForInput(today.toISOString().split('T')[0]));
-                  setShowDateMenu(false);
-                }}
-                className="flex-1 text-xs"
-              >
-                Today
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowDateMenu(false)}
-                className="flex-1 text-xs"
-              >
-                Cancel
-              </Button>
+                              <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => {
+                    const today = new Date();
+                    setSelectedYear(today.getFullYear());
+                    setSelectedMonth(today.getMonth());
+                    setSelectedDay(today.getDate());
+                    setDate(formatDateForInput(today.toISOString().split('T')[0]));
+                    setShowDateMenu(false);
+                  }}
+                  className="flex-1 text-xs"
+                >
+                  {t('today')}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowDateMenu(false)}
+                  className="flex-1 text-xs"
+                >
+                  {t('cancel')}
+                </Button>
             </div>
           </Card>
         </div>
@@ -1057,7 +1053,7 @@ export function DreamEditor() {
             <div className="flex justify-between items-center mb-4">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-white/70" />
-                <h3 className="text-xl font-semibold text-white">Categories Suggestions</h3>
+                <h3 className="text-xl font-semibold text-white">{t('categorySuggestions')}</h3>
               </div>
               <Button variant="ghost" onClick={handleCancelAITags} className="text-gray-300 hover:text-white">
                 <X className="w-5 h-5" />
@@ -1070,7 +1066,7 @@ export function DreamEditor() {
                 <Input
                   value={editingTag}
                   onChange={(e) => setEditingTag(e.target.value)}
-                  placeholder="Add a new tag..."
+                  placeholder={t('addNewTagPlaceholder')}
                   onKeyPress={(e) => {
                     if (e.key === 'Enter') {
                       e.preventDefault();
@@ -1086,7 +1082,7 @@ export function DreamEditor() {
                   variant="ghost"
                   className="text-white/60 hover:glass hover:text-white/90 px-3"
                 >
-                  Add
+                  {t('add')}
                 </Button>
               </div>
             </div>
@@ -1095,8 +1091,8 @@ export function DreamEditor() {
               {suggestedTags.length === 0 ? (
                 <div className="text-center py-8 text-gray-400">
                   <Sparkles className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                  <p>No tags suggested yet</p>
-                  <p className="text-sm">Add tags manually above</p>
+                  <p>{t('noTagsSuggested')}</p>
+                  <p className="text-sm">{t('addTagsManually')}</p>
                 </div>
               ) : (
                 suggestedTags.map((tag, index) => (
@@ -1152,7 +1148,7 @@ export function DreamEditor() {
             
             <div className="mt-6 flex justify-end gap-3 pt-4 border-t border-white/10">
               <Button variant="ghost" onClick={handleCancelAITags} className="text-gray-300 hover:text-white">
-                Cancel
+                {t('cancel')}
               </Button>
               <Button 
                 variant="ghost" 
@@ -1160,7 +1156,7 @@ export function DreamEditor() {
                 disabled={suggestedTags.length === 0}
                 className="text-white/60 hover:glass hover:text-white/90 hover:shadow-inner-lg hover:border-white/20 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Add {suggestedTags.length} Tag{suggestedTags.length !== 1 ? 's' : ''}
+                {t('addTags', { count: suggestedTags.length })}
               </Button>
             </div>
           </Card>
@@ -1172,13 +1168,13 @@ export function DreamEditor() {
         <Modal
           isOpen={showTitleSuggestion}
           onClose={handleRejectTitleSuggestion}
-          title="AI Title Suggestion"
+          title={t('aiTitleSuggestion')}
           className="max-w-md"
         >
           <div className="space-y-4">
             <div className="text-center">
               <Sparkles className="w-8 h-8 mx-auto mb-3 text-blue-400" />
-              <p className="text-gray-300 mb-2">AI suggests this title for your dream:</p>
+              <p className="text-gray-300 mb-2">{t('aiSuggestsTitle')}</p>
               <div className="bg-white/5 p-4 rounded-lg border border-white/10">
                 <h3 className="text-xl font-semibold text-white">{suggestedTitle}</h3>
               </div>
@@ -1186,14 +1182,14 @@ export function DreamEditor() {
             
             <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
               <Button variant="ghost" onClick={handleRejectTitleSuggestion} className="text-gray-300 hover:text-white">
-                Reject
+                {t('reject')}
               </Button>
               <Button 
                 variant="ghost" 
                 onClick={handleAcceptTitleSuggestion}
                 className="text-white/60 hover:glass hover:text-white/90 hover:shadow-inner-lg hover:border-white/20"
               >
-                Use This Title
+                {t('useThisTitle')}
               </Button>
             </div>
           </div>
