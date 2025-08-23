@@ -30,6 +30,26 @@ export function DateFilter({ onDateRangeChange, startDate, endDate }: DateFilter
     setTempEndDate(endDate);
   }, [startDate, endDate]);
 
+  // Initialize date picker with existing filter dates when modal opens
+  useEffect(() => {
+    if (showDateMenu) {
+      if (tempStartDate) {
+        const startDateObj = new Date(tempStartDate);
+        setSelectedYear(startDateObj.getFullYear());
+        setSelectedMonth(startDateObj.getMonth());
+      } else if (tempEndDate) {
+        const endDateObj = new Date(tempEndDate);
+        setSelectedYear(endDateObj.getFullYear());
+        setSelectedMonth(endDateObj.getMonth());
+      } else {
+        // If no dates set, use current date
+        const today = new Date();
+        setSelectedYear(today.getFullYear());
+        setSelectedMonth(today.getMonth());
+      }
+    }
+  }, [showDateMenu, tempStartDate, tempEndDate]);
+
   // Custom date picker helpers
   const getDaysInMonth = (year: number, month: number) => {
     return new Date(year, month + 1, 0).getDate();
@@ -51,6 +71,46 @@ export function DateFilter({ onDateRangeChange, startDate, endDate }: DateFilter
       day: 'numeric', 
       year: 'numeric' 
     });
+  };
+
+  // Generate years for dropdown (from 2020 to current year + 10)
+  const generateYearOptions = () => {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let year = 2020; year <= currentYear + 10; year++) {
+      years.push(year);
+    }
+    return years;
+  };
+
+  // Generate months for dropdown
+  const generateMonthOptions = () => {
+    const months = [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ];
+    return months.map((month, index) => ({
+      value: index,
+      label: month
+    }));
+  };
+
+  // Validate and adjust selected day when month/year changes
+  const validateSelectedDay = (year: number, month: number, day: number) => {
+    const daysInMonth = getDaysInMonth(year, month);
+    return Math.min(day, daysInMonth);
+  };
+
+  // Handle month change
+  const handleMonthChange = (newMonth: number) => {
+    const validatedDay = validateSelectedDay(selectedYear, newMonth, 1); // Default to day 1 for filters
+    setSelectedMonth(newMonth);
+  };
+
+  // Handle year change
+  const handleYearChange = (newYear: number) => {
+    const validatedDay = validateSelectedDay(newYear, selectedMonth, 1); // Default to day 1 for filters
+    setSelectedYear(newYear);
   };
 
   const handleDateSelect = (day: number) => {
@@ -177,10 +237,10 @@ export function DateFilter({ onDateRangeChange, startDate, endDate }: DateFilter
                 size="sm"
                 onClick={() => {
                   if (selectedMonth === 0) {
-                    setSelectedMonth(11);
-                    setSelectedYear(selectedYear - 1);
+                    handleYearChange(selectedYear - 1);
+                    handleMonthChange(11);
                   } else {
-                    setSelectedMonth(selectedMonth - 1);
+                    handleMonthChange(selectedMonth - 1);
                   }
                 }}
                 className="text-gray-400 hover:text-white"
@@ -188,18 +248,42 @@ export function DateFilter({ onDateRangeChange, startDate, endDate }: DateFilter
                 ←
               </Button>
               <div className="text-center">
-                <div className="font-semibold text-white">{getMonthName(selectedMonth)}</div>
-                <div className="text-sm text-gray-300">{selectedYear}</div>
+                <div className="font-semibold text-white">
+                  <select
+                    value={selectedMonth}
+                    onChange={(e) => handleMonthChange(parseInt(e.target.value))}
+                    className="bg-transparent text-white border-none outline-none cursor-pointer hover:text-white/80 transition-colors font-semibold"
+                  >
+                    {generateMonthOptions().map(month => (
+                      <option key={month.value} value={month.value} className="bg-gray-800 text-white">
+                        {month.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="text-sm text-gray-300">
+                  <select
+                    value={selectedYear}
+                    onChange={(e) => handleYearChange(parseInt(e.target.value))}
+                    className="bg-transparent text-gray-300 border-none outline-none cursor-pointer hover:text-white transition-colors"
+                  >
+                    {generateYearOptions().map(year => (
+                      <option key={year} value={year} className="bg-gray-800 text-white">
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => {
                   if (selectedMonth === 11) {
-                    setSelectedMonth(0);
-                    setSelectedYear(selectedYear + 1);
+                    handleYearChange(selectedYear + 1);
+                    handleMonthChange(0);
                   } else {
-                    setSelectedMonth(selectedMonth + 1);
+                    handleMonthChange(selectedMonth + 1);
                   }
                 }}
                 className="text-gray-400 hover:text-white"

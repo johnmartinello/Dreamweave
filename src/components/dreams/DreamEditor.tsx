@@ -97,6 +97,21 @@ export function DreamEditor() {
       setDescription(dream.description);
       setTags(dream.tags);
       setCitedDreams(dream.citedDreams || []);
+      
+      // Initialize date picker state with dream's date
+      if (dream.date) {
+        const dreamDate = new Date(dream.date);
+        setSelectedYear(dreamDate.getFullYear());
+        setSelectedMonth(dreamDate.getMonth());
+        setSelectedDay(dreamDate.getDate());
+      } else {
+        // If no date, use current date
+        const today = new Date();
+        setSelectedYear(today.getFullYear());
+        setSelectedMonth(today.getMonth());
+        setSelectedDay(today.getDate());
+      }
+      
       // Reset initialization flag and set it after a small delay to ensure debounced values are ready
       setIsInitialized(false);
       setTimeout(() => setIsInitialized(true), 100);
@@ -447,9 +462,6 @@ export function DreamEditor() {
 
   const handleDateSelect = (day: number) => {
     setSelectedDay(day);
-    const newDate = new Date(selectedYear, selectedMonth, day);
-    setDate(formatDateForInput(newDate.toISOString().split('T')[0]));
-    setShowDateMenu(false);
   };
 
   const generateCalendarDays = () => {
@@ -468,6 +480,44 @@ export function DreamEditor() {
     }
     
     return days;
+  };
+
+  // Generate years for dropdown (from 2020 to current year + 10)
+  const generateYearOptions = () => {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let year = 2020; year <= currentYear + 10; year++) {
+      years.push(year);
+    }
+    return years;
+  };
+
+  // Generate months for dropdown
+  const generateMonthOptions = () => {
+    return tArray('months').map((month, index) => ({
+      value: index,
+      label: month
+    }));
+  };
+
+  // Validate and adjust selected day when month/year changes
+  const validateSelectedDay = (year: number, month: number, day: number) => {
+    const daysInMonth = getDaysInMonth(year, month);
+    return Math.min(day, daysInMonth);
+  };
+
+  // Handle month change
+  const handleMonthChange = (newMonth: number) => {
+    const validatedDay = validateSelectedDay(selectedYear, newMonth, selectedDay);
+    setSelectedMonth(newMonth);
+    setSelectedDay(validatedDay);
+  };
+
+  // Handle year change
+  const handleYearChange = (newYear: number) => {
+    const validatedDay = validateSelectedDay(newYear, selectedMonth, selectedDay);
+    setSelectedYear(newYear);
+    setSelectedDay(validatedDay);
   };
 
   if (!dream) {
@@ -955,10 +1005,10 @@ export function DreamEditor() {
                 size="sm"
                 onClick={() => {
                   if (selectedMonth === 0) {
-                    setSelectedMonth(11);
-                    setSelectedYear(selectedYear - 1);
+                    handleYearChange(selectedYear - 1);
+                    handleMonthChange(11);
                   } else {
-                    setSelectedMonth(selectedMonth - 1);
+                    handleMonthChange(selectedMonth - 1);
                   }
                 }}
                 className="text-gray-400 hover:text-white"
@@ -966,18 +1016,42 @@ export function DreamEditor() {
                 ←
               </Button>
               <div className="text-center">
-                <div className="font-semibold text-white">{tArray('months')[selectedMonth]}</div>
-                <div className="text-sm text-gray-300">{selectedYear}</div>
+                <div className="font-semibold text-white">
+                  <select
+                    value={selectedMonth}
+                    onChange={(e) => handleMonthChange(parseInt(e.target.value))}
+                    className="bg-transparent text-white border-none outline-none cursor-pointer hover:text-white/80 transition-colors font-semibold"
+                  >
+                    {generateMonthOptions().map(month => (
+                      <option key={month.value} value={month.value} className="bg-gray-800 text-white">
+                        {month.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="text-sm text-gray-300">
+                  <select
+                    value={selectedYear}
+                    onChange={(e) => handleYearChange(parseInt(e.target.value))}
+                    className="bg-transparent text-gray-300 border-none outline-none cursor-pointer hover:text-white transition-colors"
+                  >
+                    {generateYearOptions().map(year => (
+                      <option key={year} value={year} className="bg-gray-800 text-white">
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => {
                   if (selectedMonth === 11) {
-                    setSelectedMonth(0);
-                    setSelectedYear(selectedYear + 1);
+                    handleYearChange(selectedYear + 1);
+                    handleMonthChange(0);
                   } else {
-                    setSelectedMonth(selectedMonth + 1);
+                    handleMonthChange(selectedMonth + 1);
                   }
                 }}
                 className="text-gray-400 hover:text-white"
@@ -1018,29 +1092,26 @@ export function DreamEditor() {
             
             {/* Quick Actions */}
             <div className="flex gap-2">
-                              <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => {
-                    const today = new Date();
-                    setSelectedYear(today.getFullYear());
-                    setSelectedMonth(today.getMonth());
-                    setSelectedDay(today.getDate());
-                    setDate(formatDateForInput(today.toISOString().split('T')[0]));
-                    setShowDateMenu(false);
-                  }}
-                  className="flex-1 text-xs"
-                >
-                  {t('today')}
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setShowDateMenu(false)}
-                  className="flex-1 text-xs"
-                >
-                  {t('cancel')}
-                </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowDateMenu(false)}
+                className="flex-1 text-xs"
+              >
+                {t('cancel')}
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => {
+                  const newDate = new Date(selectedYear, selectedMonth, selectedDay);
+                  setDate(formatDateForInput(newDate.toISOString().split('T')[0]));
+                  setShowDateMenu(false);
+                }}
+                className="flex-1 text-xs"
+                              >
+                {t('save')}
+              </Button>
             </div>
           </Card>
         </div>
@@ -1183,6 +1254,14 @@ export function DreamEditor() {
             <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
               <Button variant="ghost" onClick={handleRejectTitleSuggestion} className="text-gray-300 hover:text-white">
                 {t('reject')}
+              </Button>
+              <Button 
+                variant="ghost" 
+                onClick={handleGenerateAITitle}
+                disabled={isGeneratingTitle}
+                className="text-blue-300 hover:text-blue-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isGeneratingTitle ? t('thinking') : t('tryDifferentTitle')}
               </Button>
               <Button 
                 variant="ghost" 
