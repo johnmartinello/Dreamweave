@@ -1,8 +1,9 @@
-import type { AIConfig } from '../types';
+import type { AIConfig, Language } from '../types';
 
 interface AITagGenerationRequest {
   content: string;
   config: AIConfig;
+  language: Language;
 }
 
 interface AITagGenerationResponse {
@@ -13,6 +14,7 @@ interface AITagGenerationResponse {
 interface AITitleGenerationRequest {
   content: string;
   config: AIConfig;
+  language: Language;
 }
 
 interface AITitleGenerationResponse {
@@ -42,9 +44,9 @@ export class AIService {
     try {
       switch (config.provider) {
         case 'gemini':
-          return await this.generateTagsWithGemini(content, config);
+          return await this.generateTagsWithGemini(content, config, request.language);
         case 'lmstudio':
-          return await this.generateTagsWithLMStudio(content, config);
+          return await this.generateTagsWithLMStudio(content, config, request.language);
         default:
           return { tags: [], error: 'Unsupported AI provider' };
       }
@@ -75,9 +77,9 @@ export class AIService {
     try {
       switch (config.provider) {
         case 'gemini':
-          return await this.generateTitleWithGemini(content, config);
+          return await this.generateTitleWithGemini(content, config, request.language);
         case 'lmstudio':
-          return await this.generateTitleWithLMStudio(content, config);
+          return await this.generateTitleWithLMStudio(content, config, request.language);
         default:
           return { title: '', error: 'Unsupported AI provider' };
       }
@@ -87,11 +89,19 @@ export class AIService {
     }
   }
 
-  private static async generateTagsWithGemini(content: string, config: AIConfig): Promise<AITagGenerationResponse> {
-    const prompt = `
+  private static async generateTagsWithGemini(content: string, config: AIConfig, language: Language): Promise<AITagGenerationResponse> {
+    const prompt = language === 'pt-BR' ? `
+    Extraia 5-8 tags concisas, de uma ou duas palavras, do seguinte texto de sonho.
+    Identifique os temas centrais, emoções, símbolos, pessoas e lugares.
+    Retorne apenas as tags como uma lista separada por vírgulas, sem texto adicional ou comentários.
+
+    Conteúdo do sonho:
+    ${content}
+
+    Tags:
+    ` : `
     Extract 5–8 concise, single- or two-word tags from the following dream text.
     Identify the core themes, emotions, symbols, people, and places.
-    If the text is not in English, generate the tags in the same language as the text.
     Return only the tags as a single, comma-separated list with no extra text or commentary.
 
     Dream content:
@@ -144,8 +154,13 @@ export class AIService {
     }
   }
 
-  private static async generateTagsWithLMStudio(content: string, config: AIConfig): Promise<AITagGenerationResponse> {
-    const prompt = `Analyze the following dream content and generate 5-8 relevant tags that capture the key themes, emotions, symbols, and experiences. Return only the tags as a comma-separated list, without any additional text or formatting.
+  private static async generateTagsWithLMStudio(content: string, config: AIConfig, language: Language): Promise<AITagGenerationResponse> {
+    const prompt = language === 'pt-BR' ? `Analise o seguinte conteúdo de sonho e gere 5-8 tags relevantes que capturem os temas principais, emoções, símbolos e experiências. Retorne apenas as tags como uma lista separada por vírgulas, sem texto adicional ou formatação.
+
+Conteúdo do sonho:
+${content}
+
+Tags:` : `Analyze the following dream content and generate 5-8 relevant tags that capture the key themes, emotions, symbols, and experiences. Return only the tags as a comma-separated list, without any additional text or formatting.
 
 Dream content:
 ${content}
@@ -222,8 +237,16 @@ Tags:`;
     }
   }
 
-  private static async generateTitleWithGemini(content: string, config: AIConfig): Promise<AITitleGenerationResponse> {
-    const prompt = `
+  private static async generateTitleWithGemini(content: string, config: AIConfig, language: Language): Promise<AITitleGenerationResponse> {
+    const prompt = language === 'pt-BR' ? `
+    Crie um título conciso e evocativo (3-8 palavras) para este sonho baseado em seu conteúdo.
+    O título deve capturar a essência, emoção ou tema principal do sonho.
+    Retorne apenas o título sem texto adicional, aspas ou formatação.
+
+    Conteúdo do sonho:
+    ${content}
+
+    Título:` : `
     Create a concise, evocative title (3-8 words) for this dream based on its content.
     The title should capture the essence, emotion, or key theme of the dream.
     Return only the title with no additional text, quotes, or formatting.
@@ -273,8 +296,13 @@ Tags:`;
     }
   }
 
-  private static async generateTitleWithLMStudio(content: string, config: AIConfig): Promise<AITitleGenerationResponse> {
-    const prompt = `Create a concise, evocative title (3-8 words) for this dream based on its content. The title should capture the essence, emotion, or key theme of the dream. Return only the title with no additional text, quotes, or formatting.
+  private static async generateTitleWithLMStudio(content: string, config: AIConfig, language: Language): Promise<AITitleGenerationResponse> {
+    const prompt = language === 'pt-BR' ? `Crie um título conciso e evocativo (3-8 palavras) para este sonho baseado em seu conteúdo. O título deve capturar a essência, emoção ou tema principal do sonho. Retorne apenas o título sem texto adicional, aspas ou formatação.
+
+    Conteúdo do sonho:
+    ${content}
+
+    Título:` : `Create a concise, evocative title (3-8 words) for this dream based on its content. The title should capture the essence, emotion, or key theme of the dream. Return only the title with no additional text, quotes, or formatting.
 
     Dream content:
     ${content}

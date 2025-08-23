@@ -158,6 +158,7 @@ export function Sidebar() {
                   size="sm"
                   className="h-6 w-6 p-0 rounded-lg relative overflow-hidden group cursor-pointer text-white/60 hover:glass hover:text-white/90 hover:shadow-inner-lg hover:border-white/20"
                   onClick={() => setShowTrashModal(true)}
+                  title={t('trash')}
                 >
                   {/* Shimmer effect on hover */}
                   <div className="absolute inset-0 bg-gradient-shimmer bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -175,6 +176,7 @@ export function Sidebar() {
                   size="sm"
                   className="h-6 w-6 p-0 rounded-lg relative overflow-hidden group cursor-pointer text-white/60 hover:glass hover:text-white/90 hover:shadow-inner-lg hover:border-white/20"
                   onClick={() => setShowConfigModal(true)}
+                  title={t('settings')}
                 >
                   {/* Shimmer effect on hover */}
                   <div className="absolute inset-0 bg-gradient-shimmer bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

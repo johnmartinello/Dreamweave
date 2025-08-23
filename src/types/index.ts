@@ -119,8 +119,8 @@ export interface DreamStore {
   getTagColor: (tagName: string) => 'cyan' | 'purple' | 'pink' | 'emerald' | 'amber' | 'blue' | 'indigo' | 'violet' | 'rose' | 'teal' | 'lime' | 'orange' | 'red' | 'green' | 'yellow';
   updateAIConfig: (config: Partial<AIConfig>) => void;
   setAIProvider: (provider: AIProvider) => void;
-  generateAITags: (dreamContent: string) => Promise<string[]>;
-  generateAITitle: (dreamContent: string) => Promise<string>;
+  generateAITags: (dreamContent: string, language?: Language) => Promise<string[]>;
+  generateAITitle: (dreamContent: string, language?: Language) => Promise<string>;
   
   // Citation methods
   addCitation: (dreamId: string, citedDreamId: string) => void;

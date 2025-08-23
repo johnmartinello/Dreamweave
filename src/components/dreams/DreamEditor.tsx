@@ -15,7 +15,7 @@ import { cn } from '../../utils';
 
 
 export function DreamEditor() {
-  const { t, tArray } = useI18n();
+  const { t, tArray, language } = useI18n();
   const {
     dreams,
     selectedDreamId,
@@ -183,7 +183,7 @@ export function DreamEditor() {
 
     setIsGeneratingTags(true);
     try {
-      const generatedTags = await generateAITags(description);
+      const generatedTags = await generateAITags(description, language);
       
       // Filter out tags that already exist
       const newTags = generatedTags.filter((tag: string) => !tags.includes(tag));
@@ -210,7 +210,7 @@ export function DreamEditor() {
 
     setIsGeneratingTitle(true);
     try {
-      const generatedTitle = await generateAITitle(description);
+      const generatedTitle = await generateAITitle(description, language);
       
       if (generatedTitle && generatedTitle.trim()) {
         setSuggestedTitle(generatedTitle.trim());

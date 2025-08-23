@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Dream, DreamStore, TagWithColor, GraphData, GraphFilters } from '../types';
+import type { Dream, DreamStore, TagWithColor, GraphData, GraphFilters, Language } from '../types';
 import { storage } from '../utils/storage';
 import { AIService } from '../utils/aiService';
 import { generateId } from '../utils';
@@ -185,7 +185,7 @@ export const useDreamStore = create<DreamStore>((set, get) => ({
     });
   },
 
-  generateAITags: async (dreamContent: string) => {
+  generateAITags: async (dreamContent: string, language: Language = 'en') => {
     const { aiConfig } = get();
     
     if (!aiConfig.enabled) {
@@ -195,6 +195,7 @@ export const useDreamStore = create<DreamStore>((set, get) => ({
     const result = await AIService.generateTags({
       content: dreamContent,
       config: aiConfig,
+      language,
     });
 
     if (result.error) {
@@ -204,7 +205,7 @@ export const useDreamStore = create<DreamStore>((set, get) => ({
     return result.tags;
   },
 
-  generateAITitle: async (dreamContent: string) => {
+  generateAITitle: async (dreamContent: string, language: Language = 'en') => {
     const { aiConfig } = get();
     
     if (!aiConfig.enabled) {
@@ -214,6 +215,7 @@ export const useDreamStore = create<DreamStore>((set, get) => ({
     const result = await AIService.generateTitle({
       content: dreamContent,
       config: aiConfig,
+      language,
     });
 
     if (result.error) {
