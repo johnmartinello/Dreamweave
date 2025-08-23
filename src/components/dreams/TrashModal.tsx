@@ -133,11 +133,11 @@ export function TrashModal({ isOpen, onClose }: TrashModalProps) {
                       <div className="flex flex-wrap gap-1 mb-2">
                         {dream.tags.slice(0, 3).map((tag) => (
                           <TagPill
-                            key={tag}
-                            tag={tag}
+                            key={tag.id}
+                            tag={tag.label}
                             size="sm"
                             variant="outline"
-                            color={getTagColor(tag)}
+                            color={getTagColor(tag.id)}
                           />
                         ))}
                         {dream.tags.length > 3 && (

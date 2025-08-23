@@ -5,6 +5,7 @@
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
+    "reset:tags": "node scripts/reset-tags.js",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",

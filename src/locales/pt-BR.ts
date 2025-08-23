@@ -10,7 +10,7 @@ export const ptBR = {
   delete: 'Excluir',
   edit: 'Editar',
   add: 'Adicionar',
-  back: 'Voltar',
+  back: '',
   close: 'Fechar',
   confirm: 'Confirmar',
   reject: 'Rejeitar',
@@ -28,7 +28,58 @@ export const ptBR = {
   backToDreams: 'Voltar aos Sonhos',
   describeYourDream: 'Descreva seu sonho em detalhes... Deixe seus pensamentos fluírem naturalmente... use @ para citar sonhos',
   addCategory: 'Adicionar Categoria...',
+  category: 'Categoria',
+  subcategory: 'Subcategoria',
   noTagsYet: 'Nenhuma tag ainda',
+  
+  // Category translations
+  categoryNames: {
+    emotions: 'Emoções e Humores',
+    characters: 'Personagens e Seres',
+    places: 'Lugares e Ambientes',
+    actions: 'Ações e Eventos',
+    objects: 'Objetos e Itens',
+    dreamTypes: 'Tipos e Estilos de Sonho',
+    uncategorized: 'Sem categoria',
+  },
+  
+  // Subcategory translations
+  subcategories: {
+    // Emotions
+    positive: 'Positivo',
+    negative: 'Negativo',
+    complexStates: 'Estados Complexos',
+    
+    // Characters
+    people: 'Pessoas',
+    animals: 'Animais',
+    mythicalSpiritual: 'Mítico/Espiritual',
+    deceasedMemoryFigures: 'Falecidos/Figuras da Memória',
+    
+    // Places
+    naturalSettings: 'Ambientes Naturais',
+    urbanManmade: 'Urbano/Construído',
+    cosmicUnreal: 'Cósmico/Irreal',
+    weatherAtmosphere: 'Clima/Atmosfera',
+    
+    // Actions
+    movement: 'Movimento',
+    interactions: 'Interações',
+    transformations: 'Transformações',
+    unusualEvents: 'Eventos Incomuns',
+    
+    // Objects
+    everydayObjects: 'Objetos Cotidianos',
+    mysticalUnrealItems: 'Itens Místicos/Irreais',
+    technologyMachines: 'Tecnologia/Máquinas',
+    symbolsSigns: 'Símbolos/Sinais',
+    
+    // Dream Types
+    lucidity: 'Lucidez',
+    tone: 'Tom',
+    purposeMeaning: 'Propósito/Significado',
+    physicalState: 'Estado Físico',
+  },
   tagsWillAppear: 'As tags aparecerão aqui conforme você as adicionar',
   noNewTags: 'Nenhuma nova tag foi gerada',
   noTitleGenerated: 'Nenhum título foi gerado',
@@ -193,6 +244,68 @@ export const ptBR = {
   nodes: 'Nós',
   size: 'Tamanho',
   clickToViewDetails: 'Clique para ver detalhes',
+  
+  // Category Analysis
+  categoryAnalysis: 'Análise de Categorias',
+  categoryNetwork: 'Rede de Categorias',
+  categoryNetworkDescription: 'Visualize relacionamentos entre categorias de sonhos',
+  overview: 'Visão Geral',
+  relationships: 'Relacionamentos',
+  correlations: 'Correlações',
+  trends: 'Tendências',
+  usage: 'Uso',
+  percentage: 'Porcentagem',
+  avgPerDream: 'Média por Sonho',
+  categoryCoOccurrences: 'Co-ocorrências de Categorias',
+  coOccurrences: 'Co-ocorrências',
+  strength: 'Força',
+  correlationMatrix: 'Matriz de Correlação',
+  categoryTrends: 'Tendências de Categorias',
+  trendsComingSoon: 'Análise de tendências em breve',
+  minimumStrength: 'Força Mínima',
+  showingLinks: 'Mostrando Ligações',
+  linkStrength: 'Força da Ligação',
+  noCategoriesFound: 'Nenhuma Categoria Encontrada',
+  addDreamsWithTags: 'Adicione sonhos com tags para ver relacionamentos de categorias',
+  ofDreams: 'dos sonhos',
+  
+  // Category Insights
+  categoryInsights: 'Insights de Categorias',
+  detailedAnalysis: 'Análise Detalhada',
+  networkVisualization: 'Visualização de Rede',
+  categoryOverviewDescription: 'Obtenha uma visão geral rápida das suas categorias de sonhos',
+  categoryAnalysisDescription: 'Mergulhe fundo nos relacionamentos e padrões das categorias',
+  backToOverview: '',
+  totalTags: 'Total de Tags',
+  categoriesUsed: 'Categorias Usadas',
+  explore: 'Explorar',
+  insightsTips: 'Dicas de Insights',
+  understandingRelationships: 'Entendendo Relacionamentos',
+  relationshipsTip: 'Relacionamentos de categorias mostram como diferentes aspectos dos seus sonhos se conectam e influenciam uns aos outros.',
+  usingInsights: 'Usando Insights',
+  insightsUsageTip: 'Use esses insights para identificar padrões, temas e elementos recorrentes no seu diário de sonhos.',
+  
+  // Tag Analysis
+  tagAnalysis: 'Análise de Tags',
+  uniqueTags: 'Tags Únicas',
+  totalTagUsage: 'Uso Total de Tags',
+  totalDreams: 'Total de Sonhos',
+  avgTagsPerDream: 'Média de tags por sonho',
+  customTags: 'Tags Personalizadas',
+  filterByCategory: 'Filtrar por Categoria',
+  filterBySubcategory: 'Filtrar por Subcategoria',
+  allCategories: 'Todas as Categorias',
+  allSubcategories: 'Todas as Subcategorias',
+  tagCoOccurrences: 'Co-ocorrências de Tags',
+  tagTrends: 'Tendências de Tags',
+  noTagsFound: 'Nenhuma Tag Encontrada',
+  customTag: 'Tag Personalizada',
+  uses: 'usos',
+  subcategoryBreakdown: 'Detalhamento por Subcategoria',
+  tagInsights: 'Insights',
+  tagOverviewDescription: 'Obtenha uma visão geral rápida das suas tags de sonhos',
+  tagAnalysisDescription: 'Mergulhe fundo nos relacionamentos e padrões das tags',
+  mostUsedTags: 'Tags Mais Usadas',
   
   // Layout
   layout: 'Layout',

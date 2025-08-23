@@ -7,6 +7,7 @@ const AI_CONFIG_LMSTUDIO_KEY = 'ai_config_lmstudio';
 const PASSWORD_CONFIG_KEY = 'password_config';
 const PASSWORD_HASH_KEY = 'password_hash';
 const FIRST_LAUNCH_KEY = 'first_launch';
+const MIGRATION_HIERARCHY_KEY = 'migration_hierarchical_tags_applied_v1';
 
 const defaultGeminiConfig: AIConfig = {
   enabled: false,
@@ -52,12 +53,47 @@ const getElectronDataPath = () => {
   return null;
 };
 
-// Migration function to ensure all dreams have the citedDreams field
+// Migration function to ensure all dreams have required fields and hard-reset tags
 const migrateDreams = (dreams: any[]): Dream[] => {
   return dreams.map(dream => ({
     ...dream,
+    // Hard reset tags for new hierarchical system
+    tags: [],
     citedDreams: dream.citedDreams || [],
   }));
+};
+
+// Helpers for Electron migration flag
+const electronMigration = {
+  getApplied: (): boolean => {
+    try {
+      if (isElectron() && (window as any).require) {
+        const fs = (window as any).require('fs');
+        const path = (window as any).require('path');
+        const dataPath = getElectronDataPath();
+        if (dataPath) {
+          const flagPath = path.join(dataPath, `${MIGRATION_HIERARCHY_KEY}.txt`);
+          return fs.existsSync(flagPath);
+        }
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  },
+  setApplied: (): void => {
+    try {
+      if (isElectron() && (window as any).require) {
+        const fs = (window as any).require('fs');
+        const path = (window as any).require('path');
+        const dataPath = getElectronDataPath();
+        if (dataPath) {
+          const flagPath = path.join(dataPath, `${MIGRATION_HIERARCHY_KEY}.txt`);
+          fs.writeFileSync(flagPath, 'done');
+        }
+      }
+    } catch {}
+  }
 };
 
 // File-based storage for Electron
@@ -73,7 +109,14 @@ const electronStorage = {
           if (fs.existsSync(dreamsPath)) {
             const data = fs.readFileSync(dreamsPath, 'utf8');
             const dreams = JSON.parse(data);
-            return migrateDreams(dreams);
+            if (!electronMigration.getApplied()) {
+              const migrated = migrateDreams(dreams);
+              // Save back immediately and set flag
+              fs.writeFileSync(dreamsPath, JSON.stringify(migrated, null, 2));
+              electronMigration.setApplied();
+              return migrated;
+            }
+            return dreams;
           }
         }
       }
@@ -111,7 +154,13 @@ const electronStorage = {
           if (fs.existsSync(trashedDreamsPath)) {
             const data = fs.readFileSync(trashedDreamsPath, 'utf8');
             const dreams = JSON.parse(data);
-            return migrateDreams(dreams);
+            if (!electronMigration.getApplied()) {
+              const migrated = migrateDreams(dreams);
+              fs.writeFileSync(trashedDreamsPath, JSON.stringify(migrated, null, 2));
+              electronMigration.setApplied();
+              return migrated;
+            }
+            return dreams;
           }
         }
       }
@@ -297,7 +346,14 @@ const browserStorage = {
     try {
       const stored = localStorage.getItem(DREAMS_STORAGE_KEY);
       const dreams = stored ? JSON.parse(stored) : [];
-      return migrateDreams(dreams);
+      const applied = localStorage.getItem(MIGRATION_HIERARCHY_KEY) === 'true';
+      if (!applied && dreams.length > 0) {
+        const migrated = migrateDreams(dreams);
+        localStorage.setItem(DREAMS_STORAGE_KEY, JSON.stringify(migrated));
+        localStorage.setItem(MIGRATION_HIERARCHY_KEY, 'true');
+        return migrated;
+      }
+      return dreams;
     } catch (error) {
       console.error('Error loading dreams from storage:', error);
       return [];
@@ -316,7 +372,14 @@ const browserStorage = {
     try {
       const stored = localStorage.getItem(TRASHED_DREAMS_STORAGE_KEY);
       const dreams = stored ? JSON.parse(stored) : [];
-      return migrateDreams(dreams);
+      const applied = localStorage.getItem(MIGRATION_HIERARCHY_KEY) === 'true';
+      if (!applied && dreams.length > 0) {
+        const migrated = migrateDreams(dreams);
+        localStorage.setItem(TRASHED_DREAMS_STORAGE_KEY, JSON.stringify(migrated));
+        localStorage.setItem(MIGRATION_HIERARCHY_KEY, 'true');
+        return migrated;
+      }
+      return dreams;
     } catch (error) {
       console.error('Error loading trashed dreams from storage:', error);
       return [];

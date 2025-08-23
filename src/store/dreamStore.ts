@@ -1,20 +1,24 @@
 import { create } from 'zustand';
 import type { Dream, DreamStore, TagWithColor, GraphData, GraphFilters, Language } from '../types';
+import type { HierarchicalTag, CategoryColor, CategoryId } from '../types/taxonomy';
+import { getCategoryColor, CATEGORY_META, UNCATEGORIZED_META } from '../types/taxonomy';
 import { storage } from '../utils/storage';
 import { AIService } from '../utils/aiService';
 import { generateId } from '../utils';
 
-// Available colors for tags - expanded range
-const TAG_COLORS: Array<'cyan' | 'purple' | 'pink' | 'emerald' | 'amber' | 'blue' | 'indigo' | 'violet' | 'rose' | 'teal' | 'lime' | 'orange' | 'red' | 'green' | 'yellow'> = [
-  'cyan', 'purple', 'pink', 'emerald', 'amber', 'blue', 'indigo', 'violet', 'rose', 'teal', 'lime', 'orange', 'red', 'green', 'yellow'
-];
-
-// Generate a consistent color for a tag based on its name
-const getTagColor = (tagName: string): 'cyan' | 'purple' | 'pink' | 'emerald' | 'amber' | 'blue' | 'indigo' | 'violet' | 'rose' | 'teal' | 'lime' | 'orange' | 'red' | 'green' | 'yellow' => {
-  const hash = tagName.split('').reduce((acc, char) => {
-    return char.charCodeAt(0) + ((acc << 5) - acc);
-  }, 0);
-  return TAG_COLORS[Math.abs(hash) % TAG_COLORS.length];
+// Resolve a category color from a tag id or a category id
+const resolveTagColor = (tagIdOrCategory: string): CategoryColor => {
+  // If it's a category id
+  if ((CATEGORY_META as any)[tagIdOrCategory]) {
+    return getCategoryColor(tagIdOrCategory as CategoryId);
+  }
+  // Try to parse from tag id pattern category/subcategory/label
+  const parts = tagIdOrCategory.split('/');
+  if (parts.length >= 1) {
+    const category = parts[0] as CategoryId;
+    return getCategoryColor(category);
+  }
+  return UNCATEGORIZED_META.color;
 };
 
 export const useDreamStore = create<DreamStore>((set, get) => ({
@@ -37,6 +41,8 @@ export const useDreamStore = create<DreamStore>((set, get) => ({
     const now = new Date().toISOString();
     const newDream: Dream = {
       ...dreamData,
+      // Ensure tags are hierarchical
+      tags: Array.isArray((dreamData as any).tags) ? (dreamData as any).tags as HierarchicalTag[] : [],
       citedDreams: dreamData.citedDreams || [], // Initialize empty citations
       id: generateId(),
       createdAt: now,
@@ -191,7 +197,7 @@ export const useDreamStore = create<DreamStore>((set, get) => ({
     });
   },
 
-  generateAITags: async (dreamContent: string, language: Language = 'en') => {
+  generateAITags: async (dreamContent: string, language: Language = 'en', categoryId?: CategoryId, subcategoryId?: any) => {
     const { aiConfig } = get();
     
     if (!aiConfig.enabled) {
@@ -202,6 +208,8 @@ export const useDreamStore = create<DreamStore>((set, get) => ({
       content: dreamContent,
       config: aiConfig,
       language,
+      categoryId,
+      subcategoryId,
     });
 
     if (result.error) {
@@ -237,7 +245,12 @@ export const useDreamStore = create<DreamStore>((set, get) => ({
 
     // Filter by tag if selected
     if (selectedTag) {
-      filteredDreams = filteredDreams.filter((dream) => dream.tags.includes(selectedTag));
+      if (selectedTag.startsWith('category:')) {
+        const category = selectedTag.split(':')[1] as CategoryId;
+        filteredDreams = filteredDreams.filter((dream) => dream.tags.some(t => t.categoryId === category));
+      } else {
+        filteredDreams = filteredDreams.filter((dream) => dream.tags.some(t => t.id === selectedTag));
+      }
     }
 
     // Filter by search query if provided
@@ -246,7 +259,7 @@ export const useDreamStore = create<DreamStore>((set, get) => ({
       filteredDreams = filteredDreams.filter((dream) => 
         dream.title.toLowerCase().includes(query) ||
         dream.description.toLowerCase().includes(query) ||
-        dream.tags.some(tag => tag.toLowerCase().includes(query))
+        dream.tags.some(tag => tag.label.toLowerCase().includes(query))
       );
     }
 
@@ -272,40 +285,43 @@ export const useDreamStore = create<DreamStore>((set, get) => ({
 
   getAllTags: () => {
     const { dreams } = get();
-    const tagCounts: Record<string, number> = {};
+    const tagCounts: Record<string, { label: string; count: number }> = {};
     
     dreams.forEach((dream) => {
       dream.tags.forEach((tag) => {
-        tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+        if (!tagCounts[tag.id]) tagCounts[tag.id] = { label: tag.label, count: 0 };
+        tagCounts[tag.id].count += 1;
       });
     });
 
     return Object.entries(tagCounts)
-      .map(([name, count]) => ({ name, count }))
+      .map(([id, info]) => ({ id, label: info.label, count: info.count }))
       .sort((a, b) => b.count - a.count);
   },
 
   getAllTagsWithColors: (): TagWithColor[] => {
     const { dreams } = get();
-    const tagCounts: Record<string, number> = {};
+    const tagCounts: Record<string, { label: string; category: string; count: number }> = {};
     
     dreams.forEach((dream) => {
       dream.tags.forEach((tag) => {
-        tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+        if (!tagCounts[tag.id]) tagCounts[tag.id] = { label: tag.label, category: tag.categoryId, count: 0 };
+        tagCounts[tag.id].count += 1;
       });
     });
 
     return Object.entries(tagCounts)
-      .map(([name, count]) => ({ 
-        name, 
-        count, 
-        color: getTagColor(name)
+      .map(([id, info]) => ({ 
+        id,
+        label: info.label,
+        count: info.count,
+        color: resolveTagColor(info.category)
       }))
       .sort((a, b) => b.count - a.count);
   },
 
-  getTagColor: (tagName: string) => {
-    return getTagColor(tagName);
+  getTagColor: (tagIdOrCategory: string): CategoryColor => {
+    return resolveTagColor(tagIdOrCategory);
   },
 
   // Citation methods
@@ -384,7 +400,7 @@ export const useDreamStore = create<DreamStore>((set, get) => ({
     // Filter by tags
     if (graphFilters.selectedTags.length > 0) {
       filteredDreams = filteredDreams.filter((dream) =>
-        graphFilters.selectedTags.some(tag => dream.tags.includes(tag))
+        graphFilters.selectedTags.some(tagId => dream.tags.some(t => t.id === tagId))
       );
     }
     

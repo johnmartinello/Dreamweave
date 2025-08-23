@@ -1,9 +1,12 @@
+import type { HierarchicalTag, CategoryColor, CategoryId } from './taxonomy';
+import type { SubcategoryId } from './taxonomy';
+
 export interface Dream {
   id: string;
   title: string;
   date: string;
   description: string;
-  tags: string[];
+  tags: HierarchicalTag[];
   citedDreams: string[]; // Array of dream IDs that this dream cites
   createdAt: string;
   updatedAt: string;
@@ -11,17 +14,19 @@ export interface Dream {
 }
 
 export interface Tag {
-  name: string;
+  id: string;
+  label: string;
   count: number;
 }
 
 export interface TagWithColor {
-  name: string;
+  id: string; // tag id
+  label: string;
   count: number;
-  color: 'cyan' | 'purple' | 'pink' | 'emerald' | 'amber' | 'blue' | 'indigo' | 'violet' | 'rose' | 'teal' | 'lime' | 'orange' | 'red' | 'green' | 'yellow';
+  color: CategoryColor;
 }
 
-export type ViewType = 'home' | 'dream' | 'graph';
+export type ViewType = 'home' | 'dream' | 'graph' | 'insights';
 
 export type AIProvider = 'gemini' | 'lmstudio';
 export type Language = 'en' | 'pt-BR';
@@ -39,7 +44,7 @@ export interface GraphNode {
   id: string;
   title: string;
   date: string;
-  tags: string[];
+  tags: HierarchicalTag[];
   citedDreams: string[];
   citationCount: number; // How many dreams cite this dream
   x?: number;
@@ -59,7 +64,7 @@ export interface GraphData {
 
 export interface GraphFilters {
   dateRange: { startDate: string | null; endDate: string | null };
-  selectedTags: string[];
+  selectedTags: string[]; // tag ids
   showIsolated: boolean;
   layout: 'force' | 'hierarchical' | 'circular';
 }
@@ -94,7 +99,7 @@ export interface DreamStore {
   trashedDreams: Dream[]; // Array of dreams in trash
   selectedDreamId: string | null;
   currentView: ViewType;
-  selectedTag: string | null;
+  selectedTag: string | null; // tag id
   searchQuery: string;
   dateRange: { startDate: string | null; endDate: string | null };
   aiConfig: AIConfig;
@@ -116,10 +121,15 @@ export interface DreamStore {
   getFilteredDreams: () => Dream[];
   getAllTags: () => Tag[];
   getAllTagsWithColors: () => TagWithColor[];
-  getTagColor: (tagName: string) => 'cyan' | 'purple' | 'pink' | 'emerald' | 'amber' | 'blue' | 'indigo' | 'violet' | 'rose' | 'teal' | 'lime' | 'orange' | 'red' | 'green' | 'yellow';
+  getTagColor: (tagIdOrCategory: string) => CategoryColor;
   updateAIConfig: (config: Partial<AIConfig>) => void;
   setAIProvider: (provider: AIProvider) => void;
-  generateAITags: (dreamContent: string, language?: Language) => Promise<string[]>;
+  generateAITags: (
+    dreamContent: string,
+    language?: Language,
+    categoryId?: CategoryId,
+    subcategoryId?: SubcategoryId
+  ) => Promise<HierarchicalTag[]>;
   generateAITitle: (dreamContent: string, language?: Language) => Promise<string>;
   
   // Citation methods
