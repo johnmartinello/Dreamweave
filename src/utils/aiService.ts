@@ -132,7 +132,7 @@ export class AIService {
           }],
           generationConfig: {
             temperature: 0.3,
-            maxOutputTokens: 100,
+            maxOutputTokens: 10000,
           }
         })
       });
@@ -203,14 +203,14 @@ Tags:`;
               { role: 'user', content: prompt }
             ],
             temperature: 0.3,
-            max_tokens: 100,
+            max_tokens: 10000,
             stream: false,
           }
         : {
             model: config.modelName || 'local-model',
             prompt,
             temperature: 0.3,
-            max_tokens: 100,
+            max_tokens: 10000,
             stream: false,
           };
 
@@ -298,7 +298,7 @@ Tags:`;
           }],
           generationConfig: {
             temperature: 0.7,
-            maxOutputTokens: 50,
+            maxOutputTokens: 10000,
           }
         })
       });
@@ -349,14 +349,14 @@ Tags:`;
               { role: 'user', content: prompt }
             ],
             temperature: 0.7,
-            max_tokens: 50,
+            max_tokens: 10000,
             stream: false,
           }
         : {
             model: config.modelName || 'local-model',
             prompt,
             temperature: 0.7,
-            max_tokens: 50,
+            max_tokens: 10000,
             stream: false,
           };
 
