@@ -55,13 +55,7 @@ export function DateFilter({ onDateRangeChange, startDate, endDate }: DateFilter
     return new Date(year, month + 1, 0).getDate();
   };
 
-  const getMonthName = (month: number) => {
-    const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
-    ];
-    return months[month];
-  };
+
 
   const formatDateForDisplay = (dateString: string | null) => {
     if (!dateString) return '';
@@ -95,21 +89,15 @@ export function DateFilter({ onDateRangeChange, startDate, endDate }: DateFilter
     }));
   };
 
-  // Validate and adjust selected day when month/year changes
-  const validateSelectedDay = (year: number, month: number, day: number) => {
-    const daysInMonth = getDaysInMonth(year, month);
-    return Math.min(day, daysInMonth);
-  };
+
 
   // Handle month change
   const handleMonthChange = (newMonth: number) => {
-    const validatedDay = validateSelectedDay(selectedYear, newMonth, 1); // Default to day 1 for filters
     setSelectedMonth(newMonth);
   };
 
   // Handle year change
   const handleYearChange = (newYear: number) => {
-    const validatedDay = validateSelectedDay(newYear, selectedMonth, 1); // Default to day 1 for filters
     setSelectedYear(newYear);
   };
 
