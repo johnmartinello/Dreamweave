@@ -1,6 +1,6 @@
 # DreamWeave
 
-A modern dream journaling application built with React, TypeScript, and Tailwind CSS. Features a glass morphism UI design and powerful dream organization capabilities.
+A modern dream journaling application built with React, TypeScript, and Tailwind CSS. Features a glass morphism UI design and  dream organization capabilities with analysis.
 
 ## Screenshots
 
@@ -22,9 +22,6 @@ A modern dream journaling application built with React, TypeScript, and Tailwind
 
 ## Download
 
-### Windows (.exe)
-Download the latest Windows executable from the [Releases](https://github.com/johnmartinello/Dreamweave/releases) page or:
-
 1. Go to the [Release](https://github.com/johnmartinello/Dreamweave/tree/main/release) page
 2. Download `DreamWeave-Setup-x.x.x.exe` (latest version)
 3. Run the installer and follow the setup wizard
@@ -36,11 +33,19 @@ If you prefer to build the application yourself, see the [Installation](#install
 ## Features
 
 ### Core Functionality
-- **Dream Journaling**: Create, edit, and organize your dreams with  text descriptions
-- **Tag System**: Categorize dreams with custom tags and AI-powered tag suggestions
-- **Date Filtering**: Filter dreams by date ranges for better organization
-- **Search**: Full-text search across dream titles, descriptions, and tags
+- **Dream Journaling**: Create, edit, and organize your dreams with rich text descriptions
+- **Advanced Tag System**: Hierarchical categorization with AI-powered theme detection (if wanted)
+- **Date Filtering**: Advanced date range filtering with custom calendar interface
+- **Search**: Full-text search across dream titles, descriptions, and tags with real-time results
 - **Auto-save**: Automatic saving of dream entries as you type
+- **Trash Management**: Safely delete and restore dreams with comprehensive trash system
+
+### Hierarchical Tag System ✨
+- **Organized Categories**: Dreams are categorized into logical hierarchies (Emotions, Characters, Actions, Places, etc.)
+- **Smart Tag Suggestions**: Context-aware tag recommendations based on dream content
+- **Pattern Recognition**: Discover connections between different dream themes over time
+- **Custom Categories**: Create your own tag categories and hierarchies
+- **Tag Relationships**: See how different tags relate to each other across your dreams
 
 ### Citation System ✨
 - **Dream Linking**: Connect dreams together by citing other dreams within each entry
@@ -52,16 +57,32 @@ If you prefer to build the application yourself, see the [Installation](#install
 
 ### Dream Graph Feature ✨
 - **Interactive Graph View**: Visualize dream connections using a force-directed graph
-- **Graph Filtering**: Filter the graph by date range, tags, and connection status
+- **Graph Filtering**: Filter by date range, tag categories, and connection status
 - **Interactive Navigation**: Click on graph nodes to navigate to dream details
 - **Multiple Layouts**: Choose between force-directed, hierarchical, and circular layouts
-- **Visual Customization**: Node colors based on tags, sizes based on citation count
+- **Visual Customization**: Node colors based on tag categories, sizes based on citation count
 
 ### AI Integration
 - **Smart Tag Suggestions**: AI-powered dream categorization using Gemini or LM Studio
 - **AI Title Suggestions**: Generate evocative titles for your dreams based on their content
-- **Configurable AI Providers**: Support for multiple AI backends
-- **Local Processing**: Option to use local AI models for privacy
+- **Theme Analysis**: Automatic detection of emotional tones, recurring elements, and dream types
+- **Pattern Recognition**: Identify connections and patterns across your dream journal
+- **Configurable AI Providers**: Support for multiple AI backends with easy switching
+- **Local Processing**: Option to use local AI models for complete privacy
+- **Multi-language Support**: AI analysis in English and Portuguese (Brazilian)
+
+### Security & Privacy
+- **Password Protection**: Optional password protection with auto-lock features
+- **Local Storage**: All data stored locally on your device
+- **Privacy-First**: No data sent to external servers unless explicitly configured
+- **Secure AI**: Option to use local AI models for complete privacy
+
+### User Experience
+- **Glass Morphism UI**: Beautiful, modern interface with glass-like effects
+- **Responsive Design**: Works seamlessly on desktop and tablet devices
+- **Dark Theme**: Optimized for comfortable night-time use
+- **Keyboard Shortcuts**: Efficient navigation and editing with keyboard shortcuts
+- **Internationalization**: Support for multiple languages (English, Portuguese)
 
 ## Technology Stack
 
@@ -73,6 +94,7 @@ If you prefer to build the application yourself, see the [Installation](#install
 - **Animations**: Framer Motion
 - **Icons**: Lucide React
 - **AI Integration**: Custom service layer supporting LM Studio and Gemini
+- **Desktop App**: Electron for cross-platform desktop application
 
 ## Getting Started
 
