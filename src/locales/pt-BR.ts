@@ -149,9 +149,10 @@ export const ptBR = {
   addTags: 'Adicionar {count} Tag{plural}',
   
   // AI Title suggestions
-  aiTitleSuggestion: 'Sugestão de Título da IA',
-  aiSuggestsTitle: 'A IA sugere este título para seu sonho:',
+  aiTitleSuggestion: 'Sugestão de Título do sistema',
+  aiSuggestsTitle: 'O sistema sugere este título para seu sonho:',
   useThisTitle: 'Usar Este Título',
+  tryDifferentTitle: 'Tentar Título Diferente',
   
   // Auto-save
   savingChanges: 'Salvando alterações...',

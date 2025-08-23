@@ -149,9 +149,10 @@ export const en = {
   addTags: 'Add {count} Tag{plural}',
   
   // AI Title suggestions
-  aiTitleSuggestion: 'AI Title Suggestion',
-  aiSuggestsTitle: 'AI suggests this title for your dream:',
+  aiTitleSuggestion: 'Title Suggestion',
+  aiSuggestsTitle: 'The system suggests this title for your dream:',
   useThisTitle: 'Use This Title',
+  tryDifferentTitle: 'Try Different Title',
   
   // Auto-save
   savingChanges: 'Saving changes...',
