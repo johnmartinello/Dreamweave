@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Calendar, Clock, Plus } from 'lucide-react';
 import { useDreamStore } from '../../store/dreamStore';
-import { compareDates, getCurrentDateString } from '../../utils';
+import { compareDates, getCurrentDateString, getTodayFormatted } from '../../utils';
 import { formatDate } from '../../utils';
 import { TagPill } from './TagPill';
 import { Card } from '../ui/Card';
@@ -25,7 +25,7 @@ export function DreamList() {
 
   const handleNewDream = () => {
     addDream({
-      title: 'Untitled Dream',
+      title: `${getTodayFormatted()}`,
       date: getCurrentDateString(),
       description: '',
       tags: [],

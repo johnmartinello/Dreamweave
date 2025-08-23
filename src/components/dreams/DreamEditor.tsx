@@ -22,6 +22,7 @@ export function DreamEditor() {
     updateDream,
     deleteDream,
     generateAITags,
+    generateAITitle,
     aiConfig,
     getTagColor,
     addCitation,
@@ -55,6 +56,9 @@ export function DreamEditor() {
   const [isGeneratingTags, setIsGeneratingTags] = useState(false);
   const [showAITagModal, setShowAITagModal] = useState(false);
   const [suggestedTags, setSuggestedTags] = useState<string[]>([]);
+  const [isGeneratingTitle, setIsGeneratingTitle] = useState(false);
+  const [suggestedTitle, setSuggestedTitle] = useState<string>('');
+  const [showTitleSuggestion, setShowTitleSuggestion] = useState(false);
   const [editingTag, setEditingTag] = useState<string>('');
   const [editingIndex, setEditingIndex] = useState<number>(-1);
   
@@ -194,6 +198,41 @@ export function DreamEditor() {
     } finally {
       setIsGeneratingTags(false);
     }
+  };
+
+  const handleGenerateAITitle = async () => {
+    if (!description.trim()) {
+      alert('Please add some dream content first');
+      return;
+    }
+
+    setIsGeneratingTitle(true);
+    try {
+      const generatedTitle = await generateAITitle(description);
+      
+      if (generatedTitle && generatedTitle.trim()) {
+        setSuggestedTitle(generatedTitle.trim());
+        setShowTitleSuggestion(true);
+      } else {
+        alert('No title was generated');
+      }
+    } catch (error) {
+      console.error('Error generating title:', error);
+      alert(`Failed to generate title: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsGeneratingTitle(false);
+    }
+  };
+
+  const handleAcceptTitleSuggestion = () => {
+    setTitle(suggestedTitle);
+    setShowTitleSuggestion(false);
+    setSuggestedTitle('');
+  };
+
+  const handleRejectTitleSuggestion = () => {
+    setShowTitleSuggestion(false);
+    setSuggestedTitle('');
   };
 
   const handleConfirmAITags = () => {
@@ -487,13 +526,27 @@ export function DreamEditor() {
               {/* Title and Date Row */}
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <Input
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="Dream title..."
-                    variant="transparent"
-                    className="text-3xl font-bold px-0 py-2 rounded-xl border border-white/10 text-white/80 hover:glass hover:text-white/90 hover:font-medium hover:shadow-inner-lg hover:border-white/20 transition-all duration-300"
-                  />
+                  <div className="flex items-center gap-3">
+                    <Input
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      placeholder="Dream title..."
+                      variant="transparent"
+                      className="text-3xl font-bold px-0 py-2 rounded-xl border border-white/10 text-white/80 hover:glass hover:text-white/90 hover:font-medium hover:shadow-inner-lg hover:border-white/20 transition-all duration-300"
+                    />
+                    {/* AI Title Generation Button */}
+                    {aiConfig.enabled && (
+                      <Button
+                        onClick={handleGenerateAITitle}
+                        disabled={isGeneratingTitle || !description.trim()}
+                        size="sm"
+                        variant="ghost"
+                        className="text-gray-300 hover:text-gray-200 hover:glass hover:bg-gray-500/10 px-3 py-1 rounded-xl transition-all duration-300 border border-gray-400/20"
+                      >
+                        {isGeneratingTitle ? 'Thinking...' : 'Suggestion'}
+                      </Button>
+                    )}
+                  </div>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-300 ml-4">
                   <Calendar className="w-4 h-4 text-gray-400" />
@@ -1112,6 +1165,39 @@ export function DreamEditor() {
             </div>
           </Card>
         </div>
+      )}
+
+      {/* Title Suggestion Modal */}
+      {showTitleSuggestion && (
+        <Modal
+          isOpen={showTitleSuggestion}
+          onClose={handleRejectTitleSuggestion}
+          title="AI Title Suggestion"
+          className="max-w-md"
+        >
+          <div className="space-y-4">
+            <div className="text-center">
+              <Sparkles className="w-8 h-8 mx-auto mb-3 text-blue-400" />
+              <p className="text-gray-300 mb-2">AI suggests this title for your dream:</p>
+              <div className="bg-white/5 p-4 rounded-lg border border-white/10">
+                <h3 className="text-xl font-semibold text-white">{suggestedTitle}</h3>
+              </div>
+            </div>
+            
+            <div className="flex justify-end gap-3 pt-4 border-t border-white/10">
+              <Button variant="ghost" onClick={handleRejectTitleSuggestion} className="text-gray-300 hover:text-white">
+                Reject
+              </Button>
+              <Button 
+                variant="ghost" 
+                onClick={handleAcceptTitleSuggestion}
+                className="text-white/60 hover:glass hover:text-white/90 hover:shadow-inner-lg hover:border-white/20"
+              >
+                Use This Title
+              </Button>
+            </div>
+          </div>
+        </Modal>
       )}
     </>
   );

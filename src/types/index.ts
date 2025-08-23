@@ -119,6 +119,7 @@ export interface DreamStore {
   updateAIConfig: (config: Partial<AIConfig>) => void;
   setAIProvider: (provider: AIProvider) => void;
   generateAITags: (dreamContent: string) => Promise<string[]>;
+  generateAITitle: (dreamContent: string) => Promise<string>;
   
   // Citation methods
   addCitation: (dreamId: string, citedDreamId: string) => void;

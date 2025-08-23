@@ -204,6 +204,25 @@ export const useDreamStore = create<DreamStore>((set, get) => ({
     return result.tags;
   },
 
+  generateAITitle: async (dreamContent: string) => {
+    const { aiConfig } = get();
+    
+    if (!aiConfig.enabled) {
+      throw new Error('AI is disabled');
+    }
+
+    const result = await AIService.generateTitle({
+      content: dreamContent,
+      config: aiConfig,
+    });
+
+    if (result.error) {
+      throw new Error(result.error);
+    }
+
+    return result.title;
+  },
+
   getFilteredDreams: () => {
     const { dreams, selectedTag, searchQuery, dateRange } = get();
     let filteredDreams = dreams;

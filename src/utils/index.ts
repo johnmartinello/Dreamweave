@@ -88,6 +88,16 @@ export const getCurrentDateString = (): string => {
   return `${year}-${month}-${day}`;
 };
 
+export const getTodayFormatted = (): string => {
+  // Get today's date in "Day [date]" format
+  const now = new Date();
+  return now.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
 export const compareDates = (dateA: string, dateB: string): number => {
   // Safe date comparison that treats dates as local dates
   try {
