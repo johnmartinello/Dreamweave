@@ -179,9 +179,15 @@ export const useDreamStore = create<DreamStore>((set, get) => ({
   },
 
   setAIProvider: (provider: 'gemini' | 'lmstudio') => {
-    set(() => {
+    set((state) => {
       const newConfig = storage.getAIConfig(provider);
-      return { aiConfig: newConfig };
+      // Preserve the current enabled state when switching providers
+      const updatedConfig = {
+        ...newConfig,
+        enabled: state.aiConfig.enabled
+      };
+      storage.saveAIConfig(updatedConfig);
+      return { aiConfig: updatedConfig };
     });
   },
 

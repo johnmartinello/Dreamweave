@@ -189,36 +189,40 @@ export function TrashModal({ isOpen, onClose }: TrashModalProps) {
 
       {/* Clear trash confirmation modal */}
       {showClearConfirm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-gray-900 border border-white/10 rounded-lg p-6 max-w-md mx-4 glass">
-            <div className="flex items-center gap-3 mb-4">
-              <AlertTriangle className="w-6 h-6 text-red-400" />
-              <h3 className="text-lg font-semibold text-white/90">
-                Clear Trash
-              </h3>
-            </div>
-            <p className="text-white/70 mb-6">
-              This will permanently delete all {trashedDreams.length} dream{trashedDreams.length !== 1 ? 's' : ''} in the trash. 
-              This action cannot be undone.
-            </p>
-            <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                onClick={() => setShowClearConfirm(false)}
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="ghost"
-                onClick={handleClearTrash}
-                className="flex-1 text-red-400 border-red-400/20 hover:bg-red-400/10 hover:border-red-400/30"
-              >
-                Clear Trash
-              </Button>
-            </div>
+        <Modal 
+          isOpen={showClearConfirm} 
+          onClose={() => setShowClearConfirm(false)} 
+          title="Clear Trash"
+          className="max-w-md"
+          showCloseButton={false}
+        >
+          <div className="flex items-center gap-3 mb-4">
+            <AlertTriangle className="w-6 h-6 text-red-400" />
+            <h3 className="text-lg font-semibold text-white/90">
+              Clear Trash
+            </h3>
           </div>
-        </div>
+          <p className="text-white/70 mb-6">
+            This will permanently delete all {trashedDreams.length} dream{trashedDreams.length !== 1 ? 's' : ''} in the trash. 
+            This action cannot be undone.
+          </p>
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              onClick={() => setShowClearConfirm(false)}
+              className="flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={handleClearTrash}
+              className="flex-1 text-red-400 border-red-400/20 hover:bg-red-400/10 hover:border-red-400/30"
+            >
+              Clear Trash
+            </Button>
+          </div>
+        </Modal>
       )}
     </Modal>
   );

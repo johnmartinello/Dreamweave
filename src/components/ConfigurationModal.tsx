@@ -55,9 +55,9 @@ export function ConfigurationModal({ isOpen, onClose }: { isOpen: boolean; onClo
     setProvider(newProvider);
     setAIProvider(newProvider);
     
-    // Update form fields with the new provider's config
+    // Update form fields with the new provider's config, but preserve the enabled state
     const newConfig = useDreamStore.getState().aiConfig;
-    setEnabled(newConfig.enabled);
+    setEnabled(enabled); // Preserve the current enabled state
     setApiKey(newConfig.apiKey);
     setCompletionEndpoint(newConfig.completionEndpoint || 'http://localhost:1234/v1/chat/completions');
     setModelName(newConfig.modelName);
