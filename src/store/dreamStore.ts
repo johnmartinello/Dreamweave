@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { Dream, DreamStore, TagWithColor, GraphData, GraphFilters } from '../types';
+import type { Dream, DreamStore, TagWithColor, GraphData, GraphFilters, Language } from '../types';
 import { storage } from '../utils/storage';
 import { AIService } from '../utils/aiService';
 import { generateId } from '../utils';
@@ -179,13 +179,19 @@ export const useDreamStore = create<DreamStore>((set, get) => ({
   },
 
   setAIProvider: (provider: 'gemini' | 'lmstudio') => {
-    set(() => {
+    set((state) => {
       const newConfig = storage.getAIConfig(provider);
-      return { aiConfig: newConfig };
+      // Preserve the current enabled state when switching providers
+      const updatedConfig = {
+        ...newConfig,
+        enabled: state.aiConfig.enabled
+      };
+      storage.saveAIConfig(updatedConfig);
+      return { aiConfig: updatedConfig };
     });
   },
 
-  generateAITags: async (dreamContent: string) => {
+  generateAITags: async (dreamContent: string, language: Language = 'en') => {
     const { aiConfig } = get();
     
     if (!aiConfig.enabled) {
@@ -195,6 +201,7 @@ export const useDreamStore = create<DreamStore>((set, get) => ({
     const result = await AIService.generateTags({
       content: dreamContent,
       config: aiConfig,
+      language,
     });
 
     if (result.error) {
@@ -202,6 +209,26 @@ export const useDreamStore = create<DreamStore>((set, get) => ({
     }
 
     return result.tags;
+  },
+
+  generateAITitle: async (dreamContent: string, language: Language = 'en') => {
+    const { aiConfig } = get();
+    
+    if (!aiConfig.enabled) {
+      throw new Error('AI is disabled');
+    }
+
+    const result = await AIService.generateTitle({
+      content: dreamContent,
+      config: aiConfig,
+      language,
+    });
+
+    if (result.error) {
+      throw new Error(result.error);
+    }
+
+    return result.title;
   },
 
   getFilteredDreams: () => {

@@ -1,5 +1,6 @@
 import { Button } from '../ui/Button';
 import { useDreamStore } from '../../store/dreamStore';
+import { useI18n } from '../../hooks/useI18n';
 import { cn } from '../../utils';
 import { TagPill } from '../dreams/TagPill';
 import { Settings, Trash2 } from 'lucide-react';
@@ -9,6 +10,7 @@ import { LockButton } from '../auth/LockButton';
 import { useState } from 'react';
 
 export function Sidebar() {
+  const { t } = useI18n();
   const currentView = useDreamStore((state) => state.currentView);
   const selectedTag = useDreamStore((state) => state.selectedTag);
   const trashedDreams = useDreamStore((state) => state.trashedDreams);
@@ -59,7 +61,7 @@ export function Sidebar() {
             >
               {/* Shimmer effect on hover */}
               <div className="absolute inset-0 bg-gradient-shimmer bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <span className="relative z-10">Home</span>
+              <span className="relative z-10">{t('home')}</span>
             </Button>
 
             <Button
@@ -79,23 +81,23 @@ export function Sidebar() {
             >
               {/* Shimmer effect on hover */}
               <div className="absolute inset-0 bg-gradient-shimmer bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-              <span className="relative z-10">Connections</span>
+              <span className="relative z-10">{t('connections')}</span>
             </Button>
           </div>
 
-          {/* Enhanced Tags Section */}
+          {/* Enhanced Categories Section */}
           <div className="flex-1 min-h-0 flex flex-col">
             <div className="flex items-center mb-4">
               <h3 className="text-sm font-semibold text-white/70 uppercase tracking-wide">
-                Categories
+                {t('categories')}
               </h3>
             </div>
             
             {tags.length === 0 ? (
               <div className="text-center py-8 glass rounded-xl border border-white/10">
 
-                <p className="text-sm text-white/50 mb-1">No tags yet</p>
-                <p className="text-xs text-white/40">Tags will appear here as you add them</p>
+                <p className="text-sm text-white/50 mb-1">{t('noTagsYet')}</p>
+                <p className="text-xs text-white/40">{t('tagsWillAppear')}</p>
               </div>
             ) : (
               <div className="space-y-2 flex-1 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent hover:scrollbar-thumb-white/30">
@@ -141,7 +143,7 @@ export function Sidebar() {
           <div className="mt-auto">
             <div className="text-center mb-4">
               <p className="text-xs text-white/50">
-                Your dreams are stored locally
+                {t('dreamsStoredLocally')}
               </p>
             </div>
             <div className="pt-4 border-t border-white/10 flex items-center justify-center">
@@ -156,6 +158,7 @@ export function Sidebar() {
                   size="sm"
                   className="h-6 w-6 p-0 rounded-lg relative overflow-hidden group cursor-pointer text-white/60 hover:glass hover:text-white/90 hover:shadow-inner-lg hover:border-white/20"
                   onClick={() => setShowTrashModal(true)}
+                  title={t('trash')}
                 >
                   {/* Shimmer effect on hover */}
                   <div className="absolute inset-0 bg-gradient-shimmer bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -173,6 +176,7 @@ export function Sidebar() {
                   size="sm"
                   className="h-6 w-6 p-0 rounded-lg relative overflow-hidden group cursor-pointer text-white/60 hover:glass hover:text-white/90 hover:shadow-inner-lg hover:border-white/20"
                   onClick={() => setShowConfigModal(true)}
+                  title={t('settings')}
                 >
                   {/* Shimmer effect on hover */}
                   <div className="absolute inset-0 bg-gradient-shimmer bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

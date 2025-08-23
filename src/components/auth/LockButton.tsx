@@ -1,5 +1,6 @@
 import { Button } from '../ui/Button';
 import { usePasswordStore } from '../../store/passwordStore';
+import { useI18n } from '../../hooks/useI18n';
 
 interface LockButtonProps {
   variant?: 'primary' | 'secondary' | 'ghost' | 'gradient' | 'destructive' | 'outline';
@@ -14,6 +15,7 @@ export function LockButton({
   className = '',
   showText = false 
 }: LockButtonProps) {
+  const { t } = useI18n();
   const { lock } = usePasswordStore();
 
   const handleLock = () => {
@@ -26,7 +28,7 @@ export function LockButton({
       size={size}
       className={className}
       onClick={handleLock}
-      title="Lock screen"
+      title={t('lock')}
     >
       {/* Shimmer effect on hover */}
       <div className="absolute inset-0 bg-gradient-shimmer bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

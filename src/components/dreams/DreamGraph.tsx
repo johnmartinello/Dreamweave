@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { ArrowLeft, Filter, Tag, Search } from 'lucide-react';
+import { ArrowLeft, Filter, Search } from 'lucide-react';
 import ForceGraph2D from 'react-force-graph-2d';
 import { useDreamStore } from '../../store/dreamStore';
 import { Button } from '../ui/Button';
@@ -8,6 +8,7 @@ import { Input } from '../ui/Input';
 import { TagPill } from './TagPill';
 import { formatDateForInput, useWindowSize } from '../../utils';
 import { cn } from '../../utils';
+import { useI18n } from '../../hooks/useI18n';
 
 interface GraphNode {
   id: string;
@@ -31,6 +32,7 @@ interface GraphEdge {
 export function DreamGraph() {
   console.log('DreamGraph component rendered');
   
+  const { t } = useI18n();
   const {
     setCurrentView,
     setSelectedDream,
@@ -293,8 +295,8 @@ export function DreamGraph() {
                   "flex items-center gap-2",
                   showFilters && "bg-purple-500/20 text-purple-300 border-purple-400/30"
                 )}
-                aria-label="Filters"
-                title="Filters"
+                aria-label={t('filters')}
+                title={t('filters')}
               >
                 <Filter className="w-4 h-4" />
               </Button>
@@ -308,11 +310,10 @@ export function DreamGraph() {
         <div ref={filtersPanelRef} className="px-6 py-4 border-b border-white/10 relative z-10">
           <Card variant="glass" className="p-4">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              {/* Tags */}
+              {/* Categories */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                  <Tag className="w-4 h-4" />
-                  Tags
+                  {t('categories')}
                 </label>
                 <div className="flex flex-wrap gap-1 max-h-20 overflow-y-auto">
                   {getAllTagsWithColors().map((tag) => (
@@ -336,14 +337,14 @@ export function DreamGraph() {
               <div className="space-y-2 relative">
                 <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
                   <Search className="w-4 h-4" />
-                  Search Dreams
+                  {t('searchDreams')}
                 </label>
                 <div className="space-y-2">
                   <Input
                     value={searchQuery}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
                     onKeyDown={handleKeyDown}
-                    placeholder="Search dream titles..."
+                    placeholder={t('searchDreamTitles')}
                     variant="transparent"
                     className="bg-white/5 border-white/20 text-white placeholder-gray-400"
                   />
@@ -384,7 +385,7 @@ export function DreamGraph() {
               {/* Controls */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-300 flex items-center gap-2">
-                  Controls
+                  {t('controls')}
                 </label>
                 <div className="space-y-2">
                   <Button
@@ -393,7 +394,7 @@ export function DreamGraph() {
                     onClick={handleCentralizeGraph}
                     className="flex items-center gap-2 text-purple-300 hover:text-purple-200 hover:glass hover:bg-purple-500/10"
                   >
-                    Center View
+                    {t('centerView')}
                   </Button>
                   <Button
                     variant="ghost"
@@ -404,7 +405,7 @@ export function DreamGraph() {
                       graphFilters.showIsolated ? "text-purple-300" : undefined
                     )}
                   >
-                    {graphFilters.showIsolated ? 'Hide Isolated' : 'Show Isolated'}
+                    {graphFilters.showIsolated ? t('hideIsolated') : t('showIsolated')}
                   </Button>
                 </div>
               </div>
@@ -424,11 +425,11 @@ export function DreamGraph() {
                 
                 <div className="relative z-10">
                   
-                  <h2 className="text-2xl font-semibold text-white/90 mb-4">No Dreams to Display</h2>
+                  <h2 className="text-2xl font-semibold text-white/90 mb-4">{t('noDreamsToDisplay')}</h2>
                   <p className="text-white/60 mb-6">
                     {graphFilters.selectedTags.length > 0
-                      ? 'Try adjusting your filters to see more dreams.'
-                      : 'Create some dreams and add citations to see connections.'}
+                      ? t('tryAdjustingFilters')
+                      : t('createDreamsAndCitations')}
                   </p>
                   <Button 
                     onClick={() => setCurrentView('home')} 
@@ -439,7 +440,7 @@ export function DreamGraph() {
                     <div className="absolute inset-0 bg-gradient-shimmer bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     <span className="relative z-10 flex items-center">
                       <ArrowLeft className="w-4 h-4 mr-2" />
-                      Back to Dreams
+                      {t('backToDreams')}
                     </span>
                   </Button>
                 </div>
@@ -497,7 +498,7 @@ export function DreamGraph() {
           <Card variant="glass" className="p-4 max-w-xs">
             <h3 className="font-semibold text-white mb-2">{hoveredNode.title}</h3>
             <p className="text-sm text-gray-300 mb-2">{formatDateForInput(hoveredNode.date)}</p>
-            <p className="text-xs text-gray-400 mb-2">Citations: {hoveredNode.citationCount}</p>
+            <p className="text-xs text-gray-400 mb-2">{t('citations')}: {hoveredNode.citationCount}</p>
             {hoveredNode.tags.length > 0 && (
               <div className="flex flex-wrap gap-1">
                 {hoveredNode.tags.slice(0, 3).map((tag) => (
@@ -522,10 +523,10 @@ export function DreamGraph() {
       <div className="absolute bottom-4 left-4 z-10">
         <Card variant="glass" className="p-3">
           <div className="text-sm text-gray-300">
-            <div>Nodes: {renderedGraphData.nodes.length}</div>
-            <div>Connections: {renderedGraphData.links.length}</div>
+            <div>{t('nodes')}: {renderedGraphData.nodes.length}</div>
+            <div>{t('connections')}: {renderedGraphData.links.length}</div>
             <div className="text-xs text-gray-400 mt-1">
-              Size: {Math.round(graphDimensions.width)}×{Math.round(graphDimensions.height)}
+              {t('size')}: {Math.round(graphDimensions.width)}×{Math.round(graphDimensions.height)}
             </div>
           </div>
         </Card>

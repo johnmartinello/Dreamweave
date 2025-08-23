@@ -59,6 +59,7 @@ If you prefer to build the application yourself, see the [Installation](#install
 
 ### AI Integration
 - **Smart Tag Suggestions**: AI-powered dream categorization using Gemini or LM Studio
+- **AI Title Suggestions**: Generate evocative titles for your dreams based on their content
 - **Configurable AI Providers**: Support for multiple AI backends
 - **Local Processing**: Option to use local AI models for privacy
 
