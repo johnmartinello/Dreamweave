@@ -17,6 +17,8 @@ export const en = {
   restore: 'Restore',
   clear: 'Clear',
   search: 'Search',
+  searchByName: 'Search by name',
+  searchTagsPlaceholder: 'Search tags, categories, subcategories...',
   
   // Dream related
   dream: 'Dream',

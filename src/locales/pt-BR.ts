@@ -17,6 +17,8 @@ export const ptBR = {
   restore: 'Restaurar',
   clear: 'Limpar',
   search: 'Pesquisar',
+  searchByName: 'Pesquisar por nome',
+  searchTagsPlaceholder: 'Pesquisar tags, categorias, subcategorias...',
   
   // Dream related
   dream: 'Sonho',

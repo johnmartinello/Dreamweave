@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
+import { Input } from '../ui/Input';
 import { useDreamStore } from '../../store/dreamStore';
 import { CATEGORY_META, UNCATEGORIZED_META, getTranslatedSubcategory } from '../../types/taxonomy';
 import { useI18n } from '../../hooks/useI18n';
@@ -50,6 +51,7 @@ export function CategoryAnalysis() {
   const [activeTab, setActiveTab] = useState<'overview' | 'tags' | 'relationships' | 'categories' | 'trends'>('overview');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
+  const [textFilter, setTextFilter] = useState<string>('');
 
   // Calculate tag statistics
   const tagStats = useMemo((): TagStats[] => {
@@ -204,8 +206,32 @@ export function CategoryAnalysis() {
       filtered = filtered.filter(tag => tag.subcategoryId === selectedSubcategory);
     }
     
+    if (textFilter.trim()) {
+      const filterLower = textFilter.toLowerCase();
+      filtered = filtered.filter(tag => 
+        tag.label.toLowerCase().includes(filterLower) ||
+        tag.categoryLabel.toLowerCase().includes(filterLower) ||
+        tag.subcategoryLabel.toLowerCase().includes(filterLower)
+      );
+    }
+    
     return filtered;
-  }, [tagStats, selectedCategory, selectedSubcategory]);
+  }, [tagStats, selectedCategory, selectedSubcategory, textFilter]);
+
+  // Get filtered relationships based on text filter
+  const filteredRelationships = useMemo(() => {
+    if (!textFilter.trim()) {
+      return tagRelationships;
+    }
+    
+    const filterLower = textFilter.toLowerCase();
+    return tagRelationships.filter(rel => 
+      rel.sourceLabel.toLowerCase().includes(filterLower) ||
+      rel.targetLabel.toLowerCase().includes(filterLower) ||
+      rel.sourceCategory.toLowerCase().includes(filterLower) ||
+      rel.targetCategory.toLowerCase().includes(filterLower)
+    );
+  }, [tagRelationships, textFilter]);
 
   // Get color for category
   const getCategoryColor = (colorName: string) => {
@@ -248,7 +274,11 @@ export function CategoryAnalysis() {
             key={tab.id}
             variant="ghost"
             size="sm"
-            onClick={() => setActiveTab(tab.id as any)}
+            onClick={() => {
+              setActiveTab(tab.id as any);
+              // Clear text filter when switching tabs
+              setTextFilter('');
+            }}
             className={cn(
               "flex items-center gap-2",
               activeTab === tab.id 
@@ -329,6 +359,30 @@ export function CategoryAnalysis() {
                     </select>
                   </div>
                 )}
+
+                <div className="flex-1 min-w-[200px]">
+                  <label className="text-sm font-medium text-gray-300 mb-2 block">{t('searchByName')}</label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="text"
+                      variant="glass"
+                      placeholder={t('searchTagsPlaceholder')}
+                      value={textFilter}
+                      onChange={(e) => setTextFilter(e.target.value)}
+                      className="flex-1"
+                    />
+                    {textFilter && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setTextFilter('')}
+                        className="px-3"
+                      >
+                        {t('clear')}
+                      </Button>
+                    )}
+                  </div>
+                </div>
               </div>
             </Card>
 
@@ -396,11 +450,40 @@ export function CategoryAnalysis() {
 
         {activeTab === 'relationships' && (
           <div className="space-y-6">
+            {/* Text Filter */}
+            <Card variant="glass" className="p-4">
+              <div className="flex flex-wrap gap-4">
+                <div className="flex-1 min-w-[200px]">
+                  <label className="text-sm font-medium text-gray-300 mb-2 block">{t('searchByName')}</label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="text"
+                      variant="glass"
+                      placeholder={t('searchTagsPlaceholder')}
+                      value={textFilter}
+                      onChange={(e) => setTextFilter(e.target.value)}
+                      className="flex-1"
+                    />
+                    {textFilter && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setTextFilter('')}
+                        className="px-3"
+                      >
+                        {t('clear')}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </Card>
+
             <Card variant="glass" className="p-6">
               <h3 className="text-lg font-semibold text-white mb-4">{t('tagCoOccurrences')}</h3>
               
               <div className="space-y-4">
-                {tagRelationships.slice(0, 15).map((rel, index) => (
+                {filteredRelationships.slice(0, 15).map((rel, index) => (
                   <div key={index} className="flex items-center justify-between p-4 bg-white/5 rounded-lg">
                     <div className="flex items-center gap-3">
                       <div 
