@@ -142,4 +142,8 @@ export interface DreamStore {
   getGraphData: () => GraphData;
   updateGraphFilters: (filters: Partial<GraphFilters>) => void;
   getDreamById: (id: string) => Dream | undefined;
+  
+  // Data export/import methods
+  exportData: () => { dreams: Dream[]; trashedDreams: Dream[] };
+  importData: (dreams: Dream[], trashedDreams: Dream[]) => void;
 }

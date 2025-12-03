@@ -449,4 +449,88 @@ export const useDreamStore = create<DreamStore>((set, get) => ({
     const { dreams } = get();
     return dreams.find(d => d.id === id);
   },
+
+  // Data export/import methods
+  exportData: () => {
+    const { dreams, trashedDreams } = get();
+    return { dreams, trashedDreams };
+  },
+
+  importData: (importedDreams: Dream[], importedTrashedDreams: Dream[]) => {
+    set((state) => {
+      const existingDreamIds = new Set(state.dreams.map(d => d.id));
+      const existingTrashedIds = new Set(state.trashedDreams.map(d => d.id));
+      
+      // Create ID mapping for imported dreams to handle duplicates
+      const idMapping = new Map<string, string>();
+      
+      // Process imported dreams - generate new IDs for duplicates
+      const processedDreams = importedDreams.map((dream) => {
+        if (existingDreamIds.has(dream.id)) {
+          // Generate new ID for duplicate
+          const newId = generateId();
+          idMapping.set(dream.id, newId);
+          return {
+            ...dream,
+            id: newId,
+            // Update citedDreams to use new IDs if they were also imported
+            citedDreams: dream.citedDreams.map(citedId => idMapping.get(citedId) || citedId),
+          };
+        }
+        return dream;
+      });
+      
+      // Process imported trashed dreams - generate new IDs for duplicates
+      const processedTrashedDreams = importedTrashedDreams.map((dream) => {
+        if (existingTrashedIds.has(dream.id) || existingDreamIds.has(dream.id)) {
+          // Generate new ID for duplicate
+          const newId = generateId();
+          idMapping.set(dream.id, newId);
+          return {
+            ...dream,
+            id: newId,
+            // Update citedDreams to use new IDs if they were also imported
+            citedDreams: dream.citedDreams.map(citedId => idMapping.get(citedId) || citedId),
+          };
+        }
+        return dream;
+      });
+      
+      // Update citedDreams in processed dreams to reference new IDs
+      const finalProcessedDreams = processedDreams.map((dream) => {
+        const updatedCitedDreams = dream.citedDreams.map(citedId => {
+          // If the cited dream was imported and got a new ID, use the new ID
+          // Otherwise, keep the original ID (might reference existing dreams)
+          return idMapping.get(citedId) || citedId;
+        });
+        return {
+          ...dream,
+          citedDreams: updatedCitedDreams,
+        };
+      });
+      
+      const finalProcessedTrashedDreams = processedTrashedDreams.map((dream) => {
+        const updatedCitedDreams = dream.citedDreams.map(citedId => {
+          return idMapping.get(citedId) || citedId;
+        });
+        return {
+          ...dream,
+          citedDreams: updatedCitedDreams,
+        };
+      });
+      
+      // Merge with existing data
+      const mergedDreams = [...state.dreams, ...finalProcessedDreams];
+      const mergedTrashedDreams = [...state.trashedDreams, ...finalProcessedTrashedDreams];
+      
+      // Save to storage
+      storage.saveDreams(mergedDreams);
+      storage.saveTrashedDreams(mergedTrashedDreams);
+      
+      return {
+        dreams: mergedDreams,
+        trashedDreams: mergedTrashedDreams,
+      };
+    });
+  },
 }));

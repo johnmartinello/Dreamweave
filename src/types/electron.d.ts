@@ -3,10 +3,8 @@ declare global {
     electronAPI: {
       getAppVersion: () => Promise<string>;
       getAppName: () => Promise<string>;
-      saveDreamData: (data: any) => Promise<void>;
-      loadDreamData: () => Promise<any>;
-      exportDreams: (data: any, format: string) => Promise<void>;
-      importDreams: (filePath: string) => Promise<any>;
+      exportData: (jsonString: string) => Promise<{ success: boolean; filePath?: string; cancelled?: boolean; error?: string }>;
+      importData: () => Promise<{ success: boolean; data?: string; cancelled?: boolean; error?: string }>;
     };
   }
 }

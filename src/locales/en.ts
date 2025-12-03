@@ -138,6 +138,23 @@ export const en = {
   saveConfiguration: 'Save Configuration',
   saving: 'Saving...',
   
+  // Data Management
+  dataManagement: 'Data',
+  dataManagementDescription: 'Export and import your dreams data',
+  exportData: 'Export Data',
+  exportDescription: 'Export all your dreams and trashed dreams to a JSON file',
+  importData: 'Import Data',
+  importDescription: 'Import dreams from a JSON file (will merge with existing data)',
+  exporting: 'Exporting...',
+  importing: 'Importing...',
+  exportSuccess: 'Data exported successfully',
+  exportError: 'Failed to export data',
+  importSuccess: 'Successfully imported {count} dream(s)',
+  importError: 'Failed to import data',
+  invalidFile: 'Invalid file format',
+  dreamsCount: 'Dreams',
+  trashCount: 'Trash',
+  
   // Lockscreen
   lockscreen: 'Lockscreen',
   password: 'Password',

@@ -138,6 +138,23 @@ export const ptBR = {
   saveConfiguration: 'Salvar Configuração',
   saving: 'Salvando...',
   
+  // Data Management
+  dataManagement: 'Dados',
+  dataManagementDescription: 'Exportar e importar seus dados de sonhos',
+  exportData: 'Exportar Dados',
+  exportDescription: 'Exporte todos os seus sonhos e sonhos na lixeira para um arquivo JSON',
+  importData: 'Importar Dados',
+  importDescription: 'Importe sonhos de um arquivo JSON (será mesclado com os dados existentes)',
+  exporting: 'Exportando...',
+  importing: 'Importando...',
+  exportSuccess: 'Dados exportados com sucesso',
+  exportError: 'Falha ao exportar dados',
+  importSuccess: 'Importados com sucesso {count} sonho(s)',
+  importError: 'Falha ao importar dados',
+  invalidFile: 'Formato de arquivo inválido',
+  dreamsCount: 'Sonhos',
+  trashCount: 'Lixeira',
+  
   // Lockscreen
   lockscreen: 'Tela de Bloqueio',
   password: 'Senha',

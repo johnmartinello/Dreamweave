@@ -1,5 +1,6 @@
-const { app, BrowserWindow, Menu, ipcMain } = require('electron');
+const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 // Better development detection
 const isDev = !app.isPackaged;
@@ -107,4 +108,52 @@ ipcMain.handle('get-app-version', () => {
 
 ipcMain.handle('get-app-name', () => {
   return app.getName();
+});
+
+// Export data handler
+ipcMain.handle('export-data', async (event, jsonString) => {
+  try {
+    const { filePath } = await dialog.showSaveDialog(mainWindow, {
+      title: 'Export DreamWeave Data',
+      defaultPath: `dreamweave-export-${new Date().toISOString().split('T')[0]}.json`,
+      filters: [
+        { name: 'JSON Files', extensions: ['json'] },
+        { name: 'All Files', extensions: ['*'] }
+      ]
+    });
+
+    if (filePath) {
+      fs.writeFileSync(filePath, jsonString, 'utf8');
+      return { success: true, filePath };
+    }
+    return { success: false, cancelled: true };
+  } catch (error) {
+    console.error('Error exporting data:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+// Import data handler
+ipcMain.handle('import-data', async () => {
+  try {
+    const { filePaths, canceled } = await dialog.showOpenDialog(mainWindow, {
+      title: 'Import DreamWeave Data',
+      filters: [
+        { name: 'JSON Files', extensions: ['json'] },
+        { name: 'All Files', extensions: ['*'] }
+      ],
+      properties: ['openFile']
+    });
+
+    if (canceled || filePaths.length === 0) {
+      return { success: false, cancelled: true };
+    }
+
+    const filePath = filePaths[0];
+    const fileContent = fs.readFileSync(filePath, 'utf8');
+    return { success: true, data: fileContent };
+  } catch (error) {
+    console.error('Error importing data:', error);
+    return { success: false, error: error.message };
+  }
 });

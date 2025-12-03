@@ -8,10 +8,22 @@ files:
       - dist/**/*
       - electron/**/*
       - node_modules/**/*
+      - '!node_modules/**/*.{md,ts,tsx,map}'
+      - '!node_modules/.cache'
+      - '!node_modules/**/test'
+      - '!node_modules/**/tests'
+      - '!node_modules/**/*.test.js'
+      - '!node_modules/**/*.spec.js'
 mac:
   category: public.app-category.productivity
 win:
   target: nsis
+  compression: maximum
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
 linux:
   target: AppImage
 electronVersion: 37.3.1

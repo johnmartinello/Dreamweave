@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Zap, Key, Brain, Lock, Globe } from 'lucide-react';
+import { Zap, Key, Brain, Lock, Globe, Database } from 'lucide-react';
 import { Modal } from './ui/Modal';
 import { Button } from './ui/Button';
 import { Input } from './ui/Input';
 import { useDreamStore } from '../store/dreamStore';
 import { useLanguageStore } from '../store/languageStore';
 import { PasswordSettings } from './auth/PasswordSettings';
+import { DataManagement } from './data/DataManagement';
 import { useI18n } from '../hooks/useI18n';
 import { getAvailableLanguages } from '../utils/i18n';
 import type { AIProvider } from '../types';
@@ -21,7 +22,7 @@ export function ConfigurationModal({ isOpen, onClose }: { isOpen: boolean; onClo
   const [completionEndpoint, setCompletionEndpoint] = useState(aiConfig.completionEndpoint || 'http://localhost:1234/v1/chat/completions');
   const [modelName, setModelName] = useState(aiConfig.modelName);
   const [isSaving, setIsSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState<'ai' | 'password' | 'language'>('ai');
+  const [activeTab, setActiveTab] = useState<'ai' | 'password' | 'language' | 'data'>('ai');
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -155,6 +156,22 @@ export function ConfigurationModal({ isOpen, onClose }: { isOpen: boolean; onClo
           <div className="flex items-center justify-center gap-2 relative z-10">
             <Globe className="w-4 h-4" />
             {t('language')}
+          </div>
+        </button>
+        <button
+          onClick={() => setActiveTab('data')}
+          className={`
+            flex-1 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 relative overflow-hidden group
+            ${activeTab === 'data' 
+              ? 'glass text-white/90 font-medium shadow-inner-lg border border-white/20' 
+              : 'text-white/60 hover:glass hover:text-white/90 hover:font-medium hover:shadow-inner-lg hover:border-white/20'
+            }
+          `}
+        >
+          <div className="absolute inset-0 bg-gradient-shimmer bg-shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <div className="flex items-center justify-center gap-2 relative z-10">
+            <Database className="w-4 h-4" />
+            {t('dataManagement')}
           </div>
         </button>
       </div>
@@ -416,6 +433,8 @@ export function ConfigurationModal({ isOpen, onClose }: { isOpen: boolean; onClo
             </Button>
           </div>
         </div>
+      ) : activeTab === 'data' ? (
+        <DataManagement />
       ) : (
         <PasswordSettings onClose={onClose} />
       )}

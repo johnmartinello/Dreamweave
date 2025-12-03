@@ -7,20 +7,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
   getAppVersion: () => ipcRenderer.invoke('get-app-version'),
   getAppName: () => ipcRenderer.invoke('get-app-name'),
   
-  // File system operations (if needed for DreamWeave data)
-  // You can add more methods here as needed for your DreamWeave app
-  
-  // Example: Save dream data to local file
-  saveDreamData: (data) => ipcRenderer.invoke('save-dream-data', data),
-  
-  // Example: Load dream data from local file
-  loadDreamData: () => ipcRenderer.invoke('load-dream-data'),
-  
-  // Example: Export dreams to file
-  exportDreams: (data, format) => ipcRenderer.invoke('export-dreams', data, format),
-  
-  // Example: Import dreams from file
-  importDreams: (filePath) => ipcRenderer.invoke('import-dreams', filePath)
+  // Data export/import operations
+  exportData: (jsonString) => ipcRenderer.invoke('export-data', jsonString),
+  importData: () => ipcRenderer.invoke('import-data')
 });
 
 // Handle any errors
